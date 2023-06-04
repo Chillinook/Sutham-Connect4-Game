@@ -13,6 +13,11 @@ namespace Sutham_Connect4_Game
         {
             Name = name;
         }
+        public override string ToString()
+        {
+          return Name;
+        }
+
     }
 
 
@@ -24,14 +29,16 @@ namespace Sutham_Connect4_Game
         //private static int _hiddenNo;
         //private static Random r;
 
-
+        public static char[,] TheBoard =new char[,] { 
+            { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' },
+            { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' },
+            { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' }
+            };
         private static List<Player> playerList;
         private static int turncount = 1;
         static Connect4Game()
         {
-            playerList = new List<Player>();
-            //r = new Random();
-            //_hiddenNo = r.Next(0, 100);
+            playerList = new List<Player>();            
         }
       
         public static void AddAPlayer(string name)
@@ -40,11 +47,8 @@ namespace Sutham_Connect4_Game
             playerList.Add(player);
         }
      
-        /*
-        public override string ToString()
-        {
-            return $"Name: {Name}, Score: {Score}";
-        }
+        
+        
         public static bool Play()
         {
             Console.WriteLine($"Now Playing Player {count + 1}: {playerList[count].Name}");
@@ -91,14 +95,24 @@ namespace Sutham_Connect4_Game
 
         */
 
-        public static void DisplayPlayerInformations()
+        public static void DisplayBoard()
         {
-
-
-            for (int i = 0; i < playerList.Count; i++)
+            Console.Clear();
+            Console.WriteLine("Sutham's Connect4Game");
+            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
+            for (int i = 0; i < 6; i++)
             {
-                Console.WriteLine(playerList[i]);
+                Console.Write("|");
+
+                for (int j=0; j< 7; j++)
+                {
+                    
+                    Console.Write($" {TheBoard[i,j]} ");
+
+                }
+                Console.WriteLine("|");
             }
+            Console.WriteLine("  1  2  3  4  5  6  7 \n");
         }  
 
     } 
@@ -118,6 +132,9 @@ namespace Sutham_Connect4_Game
 
             Connect4Game.AddAPlayer(name1);
             Connect4Game.AddAPlayer(name2);
+
+            while(Connect4Game.Play());
+            //Connect4Game.DisplayBoard();
 
 
 
