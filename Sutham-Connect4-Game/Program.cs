@@ -19,6 +19,16 @@ namespace Sutham_Connect4_Game
         }
 
     }
+    public class TheColumn
+    {
+        List<char> chars;
+        public TheColumn()
+        {
+            chars = new List<char>();    
+
+        }
+
+    }
 
     public class Tracker
     {
@@ -26,6 +36,8 @@ namespace Sutham_Connect4_Game
 
 
     }
+
+   
 
         
     public class Connect4Game
@@ -35,16 +47,19 @@ namespace Sutham_Connect4_Game
         //private static int _hiddenNo;
         //private static Random r;
 
-        public static char[,] TheBoard =new char[,] { 
+        public static char[,] TheBoardArr =new char[,] { 
             { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' },
             { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' },
             { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' }
             };
+
+        public static List<TheColumn>[] TheBoardList; 
         private static List<Player> playerList;
         public static int turncount = 0;
         static Connect4Game()
         {
-            playerList = new List<Player>();            
+            playerList = new List<Player>();
+            TheBoardList = new List<TheColumn>[7];
         }
       
         public static void AddAPlayer(string name)
@@ -71,9 +86,9 @@ namespace Sutham_Connect4_Game
             {
                 Console.WriteLine($"Player {playerList[1]} symbol X please enter row number: ");
                 //Console.WriteLine(turncount);
-                if(TheBoard[5, int.Parse(Console.ReadLine())] == '#')
+                if(TheBoardArr[5, int.Parse(Console.ReadLine())] == '#')
                 {
-                    TheBoard[4, int.Parse(Console.ReadLine())] =  'X';
+                    TheBoardArr[4, int.Parse(Console.ReadLine())] =  'X';
 
                 }
                 turncount++;
@@ -84,7 +99,7 @@ namespace Sutham_Connect4_Game
             {
                 Console.WriteLine($"Player {playerList[0]} symbol O please enter row number: ");
                 //Console.WriteLine(turncount);
-                TheBoard[0, int.Parse(Console.ReadLine())] = 'O';
+                TheBoardArr[0, int.Parse(Console.ReadLine())] = 'O';
                 turncount++;
                 DisplayBoard();
                 return true;
@@ -152,7 +167,7 @@ namespace Sutham_Connect4_Game
                 for (int j=0; j< 7; j++)
                 {
                     
-                    Console.Write($" {TheBoard[i,j]} ");
+                    Console.Write($" {TheBoardArr[i,j]} ");
 
                 }
                 Console.WriteLine("|");
