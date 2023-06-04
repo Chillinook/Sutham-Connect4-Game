@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Linq;
@@ -36,46 +37,98 @@ namespace Sutham_Connect4_Game
             chars = new List<char>();
         }
 
+        private bool insertcheck()
+        {
+            if (chars.Count == 6)
+                return true;
+            else return false;
+        }
         public void InsertX()
         {
-            chars.Add( 'X' );
+            if(insertcheck())
+                Console.WriteLine("This slot is full");
+            else 
+                chars.Add( 'X' );
         }
 
         public void InsertO()
         {
-            chars.Add('O');
+            if (insertcheck())
+                Console.WriteLine("This slot is full");
+            else
+                chars.Add('O');
         }
         public void DisplayOne()
         {
-            if (Checker() == 0)
+            if (Checker() == 6)
+            {
+                
+                for (int i = 0; i < 6; i++)
+                {
+                    Console.WriteLine($" {chars[chars.Count - i - 1]} ");
+                }
+            }
+            else if (Checker() == 0)
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    Console.WriteLine('#');
+                    Console.WriteLine(" # ");
                 }
             }
-            else if (Checker() == 6)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    //Console.WriteLine(chars[i]);
-                    Console.WriteLine(chars[chars.Count - i - 1]);
-                }
-            }
+           
             else if(Checker() < 6 )
             {
-                //int freeSlot = 6 - chars.Count;
-                for (int i = 0; i < 6 - chars.Count; i++)
+                
+                for (int i = 0 ; i < 6 - chars.Count; i++)
                 {
-                    Console.WriteLine('#');
+                    Console.WriteLine(" # ");
                 }
-                for (int i=0; i< chars.Count ;i++)
+                for (int i = 0 ; i< chars.Count ; i++)
                 {
-                    Console.WriteLine(chars[chars.Count-i-1]);
+                    Console.WriteLine($" {chars[chars.Count-i-1]} ");
                 }
                 
             }
            
+        }
+
+        public char DisplayRow(int position)
+        {
+            if (chars.Count == 0)
+            {
+                return '#';
+            }
+            else if (chars.Count==6)
+            {
+                return chars[position];
+            }
+            else if (position == 0 && chars.Count == 1 )
+            {
+                return chars[position]; 
+            }
+            else if (position == 1 && chars.Count== 2 )
+            {
+                return chars[position];
+            }
+            else if (position == 2 && chars.Count == 3)
+            {
+                return chars[position]; ;
+            }
+            else if (position == 3 && chars.Count == 4)
+            {
+                return chars[position];
+            }
+            else if (position == 4 && chars.Count == 5)
+            {
+                return chars[position]; ;
+            }
+            else if (position == 5 && chars.Count == 6)
+            {
+                return chars[position];
+            }
+            else return '#';
+      
+
         }
         public int Checker()
         {
@@ -177,6 +230,7 @@ namespace Sutham_Connect4_Game
                 Console.WriteLine($"Player {playerList[0]} symbol O please enter row number: ");
                 //Console.WriteLine(turncount);
                 TheBoardArr[0, int.Parse(Console.ReadLine())] = 'O';
+                
                 turncount++;
                 DisplayBoard();
                 return true;
@@ -210,9 +264,30 @@ namespace Sutham_Connect4_Game
 
             
             TheBoardList[6].InsertX();
-            //TheBoardList[6].InsertO();
+            //TheBoardList[0].InsertO();
             //char test =
-            TheBoardList[6].DisplayOne();
+            //TheBoardList[6].DisplayOne();
+          //  for (int i = 0; i < 7; i++)
+           // {
+           //     Console.Write("|");
+           //     TheBoardList[i].DisplayOne();
+           //     Console.WriteLine("|");
+          //  }
+
+            for (int i = 0; i < 6; i++)
+            {
+                Console.Write("|");
+
+                for (int j = 0; j < 7; j++)
+                {
+
+                    Console.Write($" {TheBoardList[j].DisplayRow(i)} ");
+
+                }
+                Console.WriteLine("|");
+            }
+            Console.WriteLine("  1  2  3  4  5  6  7 \n");       
+
         }  
 
     } 
