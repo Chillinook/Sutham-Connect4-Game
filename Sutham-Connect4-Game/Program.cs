@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 
 namespace Sutham_Connect4_Game
 {
@@ -12,30 +15,32 @@ namespace Sutham_Connect4_Game
         }
     }
 
+
+    
     public class Connect4Game
     {
-        public string Name { get; set; }
-        public int Score { get; set; }
-        private static int _hiddenNo;
-        private static List<GuessingGame> playerList;
-        private static Random r;
-        private static int count = 0;
-        static GuessingGame()
+        //public string Name { get; set; }
+        //public int Score { get; set; }
+        //private static int _hiddenNo;
+        //private static Random r;
+
+
+        private static List<Player> playerList;
+        private static int turncount = 1;
+        static Connect4Game()
         {
-            playerList = new List<GuessingGame>();
-            r = new Random();
-            _hiddenNo = r.Next(0, 100);
+            playerList = new List<Player>();
+            //r = new Random();
+            //_hiddenNo = r.Next(0, 100);
         }
       
         public static void AddAPlayer(string name)
         {
-            var player = new GuessingGame
-            {
-                Name = name,
-                Score = 0
-            };
+            var player = new Player(name);
             playerList.Add(player);
         }
+     
+        /*
         public override string ToString()
         {
             return $"Name: {Name}, Score: {Score}";
@@ -84,6 +89,8 @@ namespace Sutham_Connect4_Game
             return true;
         }
 
+        */
+
         public static void DisplayPlayerInformations()
         {
 
@@ -92,19 +99,29 @@ namespace Sutham_Connect4_Game
             {
                 Console.WriteLine(playerList[i]);
             }
-        }
+        }  
 
-    }
+    } 
     internal class Program
     {
         static void Main(string[] args)
         {
+            string name1,name2;
             Console.WriteLine("Welcome to Sutham's Connect4Game");
-            Console.Write("Please enter player 1's name")
+            Console.Write("Please enter player 1's name: ");
+            name1 = Console.ReadLine();
+            var PlayerOne = new Player(name1);
+            Console.WriteLine("Welcome to Sutham's Connect4Game");
+            Console.Write("Please enter player 2's name: ");
+            name2 = Console.ReadLine();
+            var PlayerTwo = new Player(name2);
 
+            Connect4Game.AddAPlayer(name1);
+            Connect4Game.AddAPlayer(name2);
 
 
 
         }
     }
 }
+
