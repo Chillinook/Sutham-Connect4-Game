@@ -3,9 +3,16 @@ using System.Collections.Generic;
 
 namespace Sutham_Connect4_Game
 {
+    public class Player
+    {
+        public string Name { get; set; }
+        public Player(string name)
+        {
+            Name = name;
+        }
+    }
 
-
-    public class GuessingGame
+    public class Connect4Game
     {
         public string Name { get; set; }
         public int Score { get; set; }
@@ -92,7 +99,12 @@ namespace Sutham_Connect4_Game
     {
         static void Main(string[] args)
         {
-            
+            Console.WriteLine("Welcome to Sutham's Connect4Game");
+            Console.Write("Please enter player 1's name")
+
+
+
+
         }
     }
 }
