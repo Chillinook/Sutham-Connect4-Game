@@ -20,8 +20,14 @@ namespace Sutham_Connect4_Game
 
     }
 
+    public class Tracker
+    {
 
-    
+
+
+    }
+
+        
     public class Connect4Game
     {
         //public string Name { get; set; }
@@ -35,7 +41,7 @@ namespace Sutham_Connect4_Game
             { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' }
             };
         private static List<Player> playerList;
-        private static int turncount = 1;
+        public static int turncount = 0;
         static Connect4Game()
         {
             playerList = new List<Player>();            
@@ -47,11 +53,49 @@ namespace Sutham_Connect4_Game
             playerList.Add(player);
         }
      
-        
+        public bool Checker(char checkNum)
+        {
+            return true;
+
+
+        }
         
         public static bool Play()
         {
-            Console.WriteLine($"Now Playing Player {count + 1}: {playerList[count].Name}");
+            //Console.WriteLine(turncount);
+            if (turncount == 10)
+            {
+                return false;
+            }
+            if (turncount % 2 == 0)
+            {
+                Console.WriteLine($"Player {playerList[1]} symbol X please enter row number: ");
+                //Console.WriteLine(turncount);
+                if(TheBoard[5, int.Parse(Console.ReadLine())] == '#')
+                {
+                    TheBoard[4, int.Parse(Console.ReadLine())] =  'X';
+
+                }
+                turncount++;
+                DisplayBoard();
+                return true;
+            }
+            else 
+            {
+                Console.WriteLine($"Player {playerList[0]} symbol O please enter row number: ");
+                //Console.WriteLine(turncount);
+                TheBoard[0, int.Parse(Console.ReadLine())] = 'O';
+                turncount++;
+                DisplayBoard();
+                return true;
+            }
+            //return true;
+
+
+
+            /*
+
+
             Console.WriteLine("Guess a number: ");
             int guess = int.Parse(Console.ReadLine());
             if (guess == _hiddenNo)
@@ -91,9 +135,10 @@ namespace Sutham_Connect4_Game
 
             count = (count + 1) % playerList.Count;
             return true;
+            */
         }
 
-        */
+        
 
         public static void DisplayBoard()
         {
@@ -133,8 +178,9 @@ namespace Sutham_Connect4_Game
             Connect4Game.AddAPlayer(name1);
             Connect4Game.AddAPlayer(name2);
 
+            Connect4Game.DisplayBoard();
+
             while(Connect4Game.Play());
-            //Connect4Game.DisplayBoard();
 
 
 
