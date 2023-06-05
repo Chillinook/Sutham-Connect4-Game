@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Linq;
@@ -13,7 +14,7 @@ namespace Sutham_Connect4_Game
         public string Name { get; set; }
         public Player(string name)
         {
-            Name = name;
+            Name = name.Substring(0,1).ToUpper() + name.Substring(1,name.Length-1);
         }
         public override string ToString()
         {
@@ -47,8 +48,11 @@ namespace Sutham_Connect4_Game
         {
             if(insertcheck())
                 Console.WriteLine("This slot is full");
-            else 
-                chars.Add( 'X' );
+            else
+            {
+                chars.Add('X');
+                //Console.WriteLine("X success");
+            }
         }
 
         public void InsertO()
@@ -56,7 +60,11 @@ namespace Sutham_Connect4_Game
             if (insertcheck())
                 Console.WriteLine("This slot is full");
             else
+            {
                 chars.Add('O');
+                //Console.WriteLine("O success");
+            }
+
         }
         public void DisplayOne()
         {
@@ -94,41 +102,32 @@ namespace Sutham_Connect4_Game
 
         public char DisplayRow(int position)
         {
-            if (chars.Count == 0)
+            if (chars.Count == 6)
+            {
+                return chars[position];
+            }
+            else if (chars.Count == 0)
             {
                 return '#';
-            }
-            else if (chars.Count==6)
+            }                    
+            else if (chars.Count < 6 )
             {
-                return chars[position];
+                if (position > chars.Count)
+                {
+                    return '#';
+                }
+                else if (position < chars.Count)
+                {
+                    return chars[position];
+                }
+                else return '#';
             }
-            else if (position == 0 && chars.Count == 1 )
-            {
-                return chars[position]; 
-            }
-            else if (position == 1 && chars.Count== 2 )
-            {
-                return chars[position];
-            }
-            else if (position == 2 && chars.Count == 3)
-            {
-                return chars[position]; ;
-            }
-            else if (position == 3 && chars.Count == 4)
-            {
-                return chars[position];
-            }
-            else if (position == 4 && chars.Count == 5)
-            {
-                return chars[position]; ;
-            }
-            else if (position == 5 && chars.Count == 6)
-            {
-                return chars[position];
-            }
-            else return '#';
-      
+            else return '#';           
+        }
 
+        public int Counter()
+        {
+            return chars.Count();
         }
         public int Checker()
         {
@@ -179,7 +178,8 @@ namespace Sutham_Connect4_Game
             TheBoardList.Add(new TheColumn());
             TheBoardList.Add(new TheColumn());
 
-        }      
+        }           
+
         public static void AddAPlayer(string name)
         {
             var player = new Player(name);
@@ -193,57 +193,37 @@ namespace Sutham_Connect4_Game
         
         public static bool Play()
         {
-            //Console.WriteLine(turncount);
-            if (turncount == 12)
+            //Console.WriteLine(TheBoardList[0].Counter());
+            if (turncount==25)
             {
+                //Console.WriteLine(TheBoardList);
                 return false;
             }
-            if (turncount % 2 == 0)
+            else if (turncount % 2 == 0)
             {
-                Console.WriteLine($"Player {playerList[1]} symbol X please enter column number(1-7): ");
+                DisplayBoard();
+                Console.Write($"Player >> {playerList[1]} << symbol X please enter slot number(1-7): ");
                 int _tempPos = int.Parse(Console.ReadLine());
-                for (int i = 5; i > 0;i-- )
-                {
-                    //int _tempPos = int.Parse(Console.ReadLine());
-                    if (TheBoardArr[i, _tempPos-1] == '#')
-                    {
-                        TheBoardArr[i, _tempPos-1] =  'X';
-                        turncount++;
-                        DisplayBoard();
-                        return true;
-                    }
-                    else if(TheBoardArr[i, _tempPos-1] == 'X')
-                    {
-                        TheBoardArr[i-1, _tempPos-1] = 'X';
-                        turncount++;
-                        DisplayBoard();
-                        return true;
-                       
-                    }                
-                }
-                //turncount++;
-                //DisplayBoard();
+                TheBoardList[_tempPos - 1].InsertX();
+                turncount++;
                 return true;
             }
             else 
             {
-                Console.WriteLine($"Player {playerList[0]} symbol O please enter row number: ");
-                //Console.WriteLine(turncount);
-                TheBoardArr[0, int.Parse(Console.ReadLine())] = 'O';
-                
-                turncount++;
                 DisplayBoard();
-                return true;
-            }
-            //return true;
-        }
-
-        
+                Console.Write($"Player >> {playerList[0]} << symbol O please enter slot number(1-7): ");
+                int _tempPos = int.Parse(Console.ReadLine());
+                TheBoardList[_tempPos - 1].InsertO();
+                turncount++;
+                return true;              
+            }            
+        }        
 
         public static void DisplayBoard()
         {
             Console.Clear();
-            Console.WriteLine("Sutham's Connect4Game");
+        
+        /*    Console.WriteLine("Sutham's Connect4Game");
             Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
             for (int i = 0; i < 6; i++)
             {
@@ -258,36 +238,24 @@ namespace Sutham_Connect4_Game
                 Console.WriteLine("|");
             }
             Console.WriteLine("  1  2  3  4  5  6  7 \n");
-
+        */
             Console.WriteLine("Sutham's Connect4Game");
             Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
+      
 
-            
-            TheBoardList[6].InsertX();
-            //TheBoardList[0].InsertO();
-            //char test =
-            //TheBoardList[6].DisplayOne();
-          //  for (int i = 0; i < 7; i++)
-           // {
-           //     Console.Write("|");
-           //     TheBoardList[i].DisplayOne();
-           //     Console.WriteLine("|");
-          //  }
-
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 6 ; i++)
             {
                 Console.Write("|");
 
                 for (int j = 0; j < 7; j++)
                 {
 
-                    Console.Write($" {TheBoardList[j].DisplayRow(i)} ");
+                    Console.Write($" {TheBoardList[j].DisplayRow(6-i-1)} ");
 
                 }
                 Console.WriteLine("|");
             }
-            Console.WriteLine("  1  2  3  4  5  6  7 \n");       
-
+            Console.WriteLine("  1  2  3  4  5  6  7 \n");
         }  
 
     } 
@@ -300,7 +268,7 @@ namespace Sutham_Connect4_Game
             Console.Write("Please enter player 1's name: ");
             name1 = Console.ReadLine();
             var PlayerOne = new Player(name1);
-            Console.WriteLine("Welcome to Sutham's Connect4Game");
+            //Console.WriteLine("Welcome to Sutham's Connect4Game");
             Console.Write("Please enter player 2's name: ");
             name2 = Console.ReadLine();
             var PlayerTwo = new Player(name2);
@@ -308,7 +276,7 @@ namespace Sutham_Connect4_Game
             Connect4Game.AddAPlayer(name1);
             Connect4Game.AddAPlayer(name2);
 
-            Connect4Game.DisplayBoard();
+            //Connect4Game.DisplayBoard();
 
             while(Connect4Game.Play());
 
