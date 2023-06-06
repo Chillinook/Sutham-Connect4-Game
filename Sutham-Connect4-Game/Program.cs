@@ -165,7 +165,7 @@ namespace Sutham_Connect4_Game
 
         public static List<TheColumn> TheBoardList; 
         private static List<Player> playerList;
-        public static int turncount = 0;
+        public static int turncount = 1;
         static Connect4Game()
         {
             playerList = new List<Player>();
