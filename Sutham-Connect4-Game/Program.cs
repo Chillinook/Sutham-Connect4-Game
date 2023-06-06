@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -23,7 +24,6 @@ namespace Sutham_Connect4_Game
 
     }
  
-
     public class Tracker
     {
 
@@ -37,7 +37,6 @@ namespace Sutham_Connect4_Game
         {
             chars = new List<char>();
         }
-
         private bool insertcheck()
         {
             if (chars.Count == 6)
@@ -145,11 +144,6 @@ namespace Sutham_Connect4_Game
         }
 
     }
-
-
-
-
-
     public class Connect4Game
     {
         //public string Name { get; set; }
@@ -190,11 +184,10 @@ namespace Sutham_Connect4_Game
         {
             return true;
         }
-        
         public static bool Play()
         {
             //Console.WriteLine(TheBoardList[0].Counter());
-            if (turncount==25)
+            if (Referee.ColumnCheck() || Referee.RowCheck() )
             {
                 //Console.WriteLine(TheBoardList);
                 return false;
@@ -221,44 +214,115 @@ namespace Sutham_Connect4_Game
 
         public static void DisplayBoard()
         {
-            Console.Clear();
-        
-        /*    Console.WriteLine("Sutham's Connect4Game");
-            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
-            for (int i = 0; i < 6; i++)
-            {
-                Console.Write("|");
-
-                for (int j=0; j< 7; j++)
-                {
-                    
-                    Console.Write($" {TheBoardArr[i,j]} ");
-
-                }
-                Console.WriteLine("|");
-            }
-            Console.WriteLine("  1  2  3  4  5  6  7 \n");
-        */
+            Console.Clear();       
             Console.WriteLine("Sutham's Connect4Game");
-            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
-      
+            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");      
 
             for (int i = 0; i < 6 ; i++)
             {
                 Console.Write("|");
-
                 for (int j = 0; j < 7; j++)
                 {
-
                     Console.Write($" {TheBoardList[j].DisplayRow(6-i-1)} ");
-
                 }
                 Console.WriteLine("|");
             }
             Console.WriteLine("  1  2  3  4  5  6  7 \n");
+            Referee.RecieveBoard(TheBoardList);
         }  
-
     } 
+
+    public static class Referee
+    {
+        public static char[,] TheBoardArr = new char[,] {
+            { '#', '#', '#', '#', '#', '#', '#' }, 
+            { '#', '#', '#', '#', '#', '#', '#' },
+            { '#', '#', '#', '#', '#', '#', '#' },
+            { '#', '#', '#', '#', '#', '#', '#' },
+            { '#', '#', '#', '#', '#', '#', '#' },
+            { '#', '#', '#', '#', '#', '#', '#' }
+            };
+
+        public static void RecieveBoard(List<TheColumn> board)
+        {
+
+            for (int i = 0; i < 6; i++)
+            {             
+                for (int j = 0; j < 7; j++)
+                {
+                    TheBoardArr[i,j] = board[j].DisplayRow(6-i-1);
+                }                
+            }
+            //RowCheck();
+            /*
+            for (int i = 0; i < 6; i++)
+            {
+                Console.Write("|");
+                for (int j = 0; j < 7; j++)
+                {
+                    Console.Write($" {TheBoardArr[i, j]} ");
+                }
+                Console.WriteLine("|");
+            }
+            */
+        }
+        public static bool ColumnCheck()
+        {
+            int Ocounter = 0;
+            int Xcounter = 0;
+            for(int i=0;i<6 ; i++ )
+            {
+                for(int j=0;j<7 ;j++ )
+                {
+                    if (TheBoardArr[i, j] == '#')
+                    {
+                       break;
+                    }
+                    else if (TheBoardArr[i,j] == 'O')
+                    {
+                        Ocounter++;                        
+                    }
+                    else 
+                        Xcounter++;
+                }
+                if(Xcounter == 4 || Ocounter == 4)
+                {
+                    Console.WriteLine("Win Column");
+                    return true;
+                    //break;
+                }
+            }
+            return false;
+        }
+        public static bool RowCheck()
+        {
+            int Ocounter = 0;
+            int Xcounter = 0;
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    if (TheBoardArr[j, i] == '#')
+                    {
+                        break;
+                    }
+                    else if (TheBoardArr[j, i] == 'O')
+                    {
+                        Ocounter++;
+                    }
+                    else
+                        Xcounter++;
+                }
+                if (Xcounter == 4 || Ocounter == 4)
+                {
+                    Console.WriteLine("Win Row");
+                    return true;
+                    //break;
+                }
+            }
+            return false;
+        }
+    }
     internal class Program
     {
         static void Main(string[] args)
