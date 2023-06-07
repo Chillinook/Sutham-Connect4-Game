@@ -284,7 +284,8 @@ namespace Sutham_Connect4_Game
                 }
                 if (Xcounter == 4 || Ocounter == 4)
                 {
-                    Console.WriteLine("Win Row");
+                    if(Xcounter==4)Console.WriteLine("X Win Row");
+                    else if(Ocounter == 4) Console.WriteLine("O Win Row");
                     return true;                    
                 }
             }           
@@ -329,7 +330,8 @@ namespace Sutham_Connect4_Game
                 }
                 if (Xcounter == 4 || Ocounter == 4)
                 {
-                    Console.WriteLine("Win Column");
+                    if (Xcounter == 4) Console.WriteLine("X Win Column");
+                    else if (Ocounter == 4) Console.WriteLine("O Win Column");
                     return true;
                 }
             }
