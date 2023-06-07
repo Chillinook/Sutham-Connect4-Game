@@ -26,6 +26,20 @@ namespace Sutham_Connect4_Game
  
     public class Tracker
     {
+        public string Name { get; set; }
+        public int SlotIn { get; set; }
+
+        public Tracker()
+        {
+            
+        }
+
+        private void Inputchecher()
+        { 
+        
+        
+        
+        }
 
 
 
@@ -145,7 +159,9 @@ namespace Sutham_Connect4_Game
 
     }
     public class Connect4Game
-    {     
+    {
+        public static List<Tracker> GameTracker; 
+
         public static List<TheColumn> TheBoardList; 
         private static List<Player> playerList;
         public static int turncount = 1;
@@ -337,7 +353,52 @@ namespace Sutham_Connect4_Game
             }
             return false;
         }
-       
+        public static bool DiagonalCheck()
+        {
+            int Ocounter;
+            int Xcounter;
+            for (int i = 0; i < 7; i++)
+            {
+                Ocounter = 0;
+                Xcounter = 0;
+                for (int j = 0; j < 6; j++)
+                {
+                    if (j == 0)
+                    {
+                        if (TheBoardArr[j, i] == 'O')
+                        {
+                            Ocounter++;
+                        }
+                        else if (TheBoardArr[j, i] == 'X')
+                        {
+                            Xcounter++;
+                        }
+                    }
+                    else if (j > 0)
+                    {
+                        if (TheBoardArr[j, i] == 'O')
+                        {
+                            if (TheBoardArr[j - 1, i] == 'X')
+                                Ocounter = 1;
+                            else Ocounter++;
+                        }
+                        else if (TheBoardArr[j - 1, i] == 'X')
+                        {
+                            if (TheBoardArr[j - 1, i] == 'O')
+                                Xcounter = 1;
+                            else Xcounter++;
+                        }
+                    }
+                }
+                if (Xcounter == 4 || Ocounter == 4)
+                {
+                    if (Xcounter == 4) Console.WriteLine("X Win Diagonal");
+                    else if (Ocounter == 4) Console.WriteLine("O Win Diagonal");
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     internal class Program
     {
