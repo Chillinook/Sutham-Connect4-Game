@@ -145,21 +145,11 @@ namespace Sutham_Connect4_Game
 
     }
     public class Connect4Game
-    {
-        //public string Name { get; set; }
-        //public int Score { get; set; }
-        //private static int _hiddenNo;
-        //private static Random r;
-
-        public static char[,] TheBoardArr =new char[,] { 
-            { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' },
-            { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' },
-            { '#', '#', '#', '#', '#', '#', '#' }, { '#', '#', '#', '#', '#', '#', '#' }
-            };
-
+    {     
         public static List<TheColumn> TheBoardList; 
         private static List<Player> playerList;
         public static int turncount = 1;
+        static bool answer;
         static Connect4Game()
         {
             playerList = new List<Player>();
@@ -186,27 +176,28 @@ namespace Sutham_Connect4_Game
         }
         public static bool Play()
         {
-            //Console.WriteLine(TheBoardList[0].Counter());
+            
             if (Referee.ColumnCheck() || Referee.RowCheck() )
-            {
-                //Console.WriteLine(TheBoardList);
+            {                
                 return false;
             }
-            else if (turncount % 2 == 0)
+            if (turncount % 2 == 0)
             {
-                DisplayBoard();
+                //DisplayBoard();
                 Console.Write($"Player >> {playerList[1]} << symbol X please enter slot number(1-7): ");
                 int _tempPos = int.Parse(Console.ReadLine());
                 TheBoardList[_tempPos - 1].InsertX();
+                DisplayBoard();
                 turncount++;
                 return true;
             }
             else 
             {
-                DisplayBoard();
+                //DisplayBoard();
                 Console.Write($"Player >> {playerList[0]} << symbol O please enter slot number(1-7): ");
                 int _tempPos = int.Parse(Console.ReadLine());
                 TheBoardList[_tempPos - 1].InsertO();
+                DisplayBoard();
                 turncount++;
                 return true;              
             }            
@@ -229,6 +220,7 @@ namespace Sutham_Connect4_Game
             }
             Console.WriteLine("  1  2  3  4  5  6  7 \n");
             Referee.RecieveBoard(TheBoardList);
+            //Referee.RowCheck();
         }  
     } 
 
@@ -245,83 +237,105 @@ namespace Sutham_Connect4_Game
 
         public static void RecieveBoard(List<TheColumn> board)
         {
-
             for (int i = 0; i < 6; i++)
             {             
                 for (int j = 0; j < 7; j++)
                 {
                     TheBoardArr[i,j] = board[j].DisplayRow(6-i-1);
                 }                
-            }
-            //RowCheck();
-            /*
-            for (int i = 0; i < 6; i++)
-            {
-                Console.Write("|");
-                for (int j = 0; j < 7; j++)
-                {
-                    Console.Write($" {TheBoardArr[i, j]} ");
-                }
-                Console.WriteLine("|");
-            }
-            */
-        }
-        public static bool ColumnCheck()
-        {
-            int Ocounter = 0;
-            int Xcounter = 0;
-            for(int i=0;i<6 ; i++ )
-            {
-                for(int j=0;j<7 ;j++ )
-                {
-                    if (TheBoardArr[i, j] == '#')
-                    {
-                       break;
-                    }
-                    else if (TheBoardArr[i,j] == 'O')
-                    {
-                        Ocounter++;                        
-                    }
-                    else 
-                        Xcounter++;
-                }
-                if(Xcounter == 4 || Ocounter == 4)
-                {
-                    Console.WriteLine("Win Column");
-                    return true;
-                    //break;
-                }
-            }
-            return false;
+            }           
         }
         public static bool RowCheck()
         {
-            int Ocounter = 0;
-            int Xcounter = 0;
-            for (int i = 0; i < 7; i++)
+            int Ocounter;
+            int Xcounter;                   
+            for (int i = 0; i < 6; i++)
             {
-                for (int j = 0; j < 6; j++)
+                Ocounter = 0;
+                Xcounter = 0;
+                for (int j = 0; j < 7; j++)
                 {
-                    if (TheBoardArr[j, i] == '#')
-                    {
-                        break;
+                    if (j == 0)
+                    {                        
+                        if (TheBoardArr[i, j] == 'O')
+                        {
+                            Ocounter++;
+                        }
+                        else if (TheBoardArr[i, j] == 'X')
+                        {
+                            Xcounter++;
+                        }
                     }
-                    else if (TheBoardArr[j, i] == 'O')
+                    else if (j > 0 )
                     {
-                        Ocounter++;
+                        if (TheBoardArr[i,j] == 'O')
+                        {
+                            if (TheBoardArr[i,j-1] == 'X')
+                                Ocounter = 1;
+                            else Ocounter++;
+                        }
+                        else if (TheBoardArr[i, j] == 'X')
+                        {
+                            if(TheBoardArr[i, j-1] == 'O')
+                                Xcounter = 1;
+                            else Xcounter++;
+                        }
                     }
-                    else
-                        Xcounter++;
                 }
                 if (Xcounter == 4 || Ocounter == 4)
                 {
                     Console.WriteLine("Win Row");
+                    return true;                    
+                }
+            }           
+            return false;
+        }
+        public static bool ColumnCheck()
+        {
+            int Ocounter;
+            int Xcounter;
+            for (int i = 0; i < 7; i++)
+            {
+                Ocounter = 0;
+                Xcounter = 0;
+                for (int j = 0; j < 6; j++)
+                {
+                    if (j == 0)
+                    {
+                        if (TheBoardArr[j,i ] == 'O')
+                        {
+                            Ocounter++;
+                        }
+                        else if (TheBoardArr[j,i] == 'X')
+                        {
+                            Xcounter++;
+                        }
+                    }
+                    else if (j > 0)
+                    {
+                        if (TheBoardArr[j, i] == 'O')
+                        {
+                            if (TheBoardArr[j-1,i] == 'X')
+                                Ocounter = 1;
+                            else Ocounter++;
+                        }
+                        else if (TheBoardArr[j-1, i] == 'X')
+                        {
+                            if (TheBoardArr[j-1, i] == 'O')
+                                Xcounter = 1;
+                            else Xcounter++;
+                        }
+                    }
+                }
+                if (Xcounter == 4 || Ocounter == 4)
+                {
+                    Console.WriteLine("Win Column");
                     return true;
-                    //break;
                 }
             }
             return false;
         }
+       
     }
     internal class Program
     {
@@ -331,18 +345,21 @@ namespace Sutham_Connect4_Game
             Console.WriteLine("Welcome to Sutham's Connect4Game");
             Console.Write("Please enter player 1's name: ");
             name1 = Console.ReadLine();
-            var PlayerOne = new Player(name1);
-            //Console.WriteLine("Welcome to Sutham's Connect4Game");
+            var PlayerOne = new Player(name1);           
             Console.Write("Please enter player 2's name: ");
             name2 = Console.ReadLine();
             var PlayerTwo = new Player(name2);
-
             Connect4Game.AddAPlayer(name1);
             Connect4Game.AddAPlayer(name2);
-
-            //Connect4Game.DisplayBoard();
-
-            while(Connect4Game.Play());
+            Connect4Game.DisplayBoard();
+            while (Connect4Game.Play()); 
+           
+            //do
+            //{
+            //    Connect4Game.Play();
+                
+            //}              
+            //while( Referee.ColumnCheck() || Referee.RowCheck() );
 
 
 
