@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -177,15 +178,13 @@ namespace Sutham_Connect4_Game
             TheBoardList.Add(new TheColumn());
             TheBoardList.Add(new TheColumn());
             TheBoardList.Add(new TheColumn());
-
         }           
 
         public static void AddAPlayer(string name)
         {
             var player = new Player(name);
             playerList.Add(player);
-        }
-     
+        }     
         public bool Checker(char checkNum)
         {
             return true;
@@ -193,7 +192,7 @@ namespace Sutham_Connect4_Game
         public static bool Play()
         {
             
-            if (Referee.ColumnCheck() || Referee.RowCheck() )
+            if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
                 return false;
             }
@@ -355,47 +354,55 @@ namespace Sutham_Connect4_Game
         }
         public static bool DiagonalCheck()
         {
-            int Ocounter;
-            int Xcounter;
-            for (int i = 0; i < 7; i++)
+            int Ocounter = 0;
+            int Xcounter = 0;
+            for (int i = 0; i < 6 ; i++)
             {
-                Ocounter = 0;
-                Xcounter = 0;
-                for (int j = 0; j < 6; j++)
+                //Ocounter = 0;
+                //Xcounter = 0;
+                for (int j = 0; j <  7; j++)
                 {
-                    if (j == 0)
+                    if (i == j)
                     {
-                        if (TheBoardArr[j, i] == 'O')
+                        
+                        if (i == 0)
                         {
-                            Ocounter++;
+                            //Console.WriteLine("3");
+                            if (TheBoardArr[6-i-1, j] == 'O')
+                            {
+                                Ocounter++;
+                                Console.WriteLine("5");
+                            }
+                            else if (TheBoardArr[6 - i - 1, j] == 'X')
+                            {
+                                Xcounter++;
+                                Console.WriteLine("6");
+                            }
                         }
-                        else if (TheBoardArr[j, i] == 'X')
+                        else if (i > 0)
                         {
-                            Xcounter++;
+                            
+                            if (TheBoardArr[6 - i - 1, j] == 'O')
+                            {
+                                if (TheBoardArr[6 - i - 1 , j - 1] == 'X')
+                                    Ocounter = 1;
+                                else Ocounter++;
+                            }
+                            else if (TheBoardArr[6 - i - 1, j] == 'X')
+                            {
+                                if (TheBoardArr[6 - i - 1 , j - 1] == 'O')
+                                    Xcounter = 1;
+                                else Xcounter++;
+                            }
                         }
                     }
-                    else if (j > 0)
-                    {
-                        if (TheBoardArr[j, i] == 'O')
-                        {
-                            if (TheBoardArr[j - 1, i] == 'X')
-                                Ocounter = 1;
-                            else Ocounter++;
-                        }
-                        else if (TheBoardArr[j - 1, i] == 'X')
-                        {
-                            if (TheBoardArr[j - 1, i] == 'O')
-                                Xcounter = 1;
-                            else Xcounter++;
-                        }
-                    }
-                }
-                if (Xcounter == 4 || Ocounter == 4)
-                {
-                    if (Xcounter == 4) Console.WriteLine("X Win Diagonal");
-                    else if (Ocounter == 4) Console.WriteLine("O Win Diagonal");
-                    return true;
-                }
+                }                
+            }
+            if (Xcounter == 4 || Ocounter == 4)
+            {
+                if (Xcounter == 4) Console.WriteLine("X Win Diagonal");
+                else if (Ocounter == 4) Console.WriteLine("O Win Diagonal");
+                return true;
             }
             return false;
         }
