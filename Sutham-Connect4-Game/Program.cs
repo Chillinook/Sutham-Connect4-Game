@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -64,8 +65,7 @@ namespace Sutham_Connect4_Game
                 Console.WriteLine("This slot is full");
             else
             {
-                chars.Add('X');
-                //Console.WriteLine("X success");
+                chars.Add('X');                
             }
         }
 
@@ -75,10 +75,8 @@ namespace Sutham_Connect4_Game
                 Console.WriteLine("This slot is full");
             else
             {
-                chars.Add('O');
-                //Console.WriteLine("O success");
+                chars.Add('O');               
             }
-
         }
         public void DisplayOne()
         {
@@ -99,8 +97,7 @@ namespace Sutham_Connect4_Game
             }
            
             else if(Checker() < 6 )
-            {
-                
+            {                
                 for (int i = 0 ; i < 6 - chars.Count; i++)
                 {
                     Console.WriteLine(" # ");
@@ -108,8 +105,7 @@ namespace Sutham_Connect4_Game
                 for (int i = 0 ; i< chars.Count ; i++)
                 {
                     Console.WriteLine($" {chars[chars.Count-i-1]} ");
-                }
-                
+                }                
             }
            
         }
@@ -191,7 +187,7 @@ namespace Sutham_Connect4_Game
         }
         public static bool Play()
         {
-            
+            Referee.RecieveBoard(TheBoardList);
             if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
                 return false;
@@ -222,19 +218,30 @@ namespace Sutham_Connect4_Game
         {
             Console.Clear();       
             Console.WriteLine("Sutham's Connect4Game");
-            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");      
-
+            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
+            //Referee.RecieveBoard(TheBoardList);
             for (int i = 0; i < 6 ; i++)
             {
                 Console.Write("|");
                 for (int j = 0; j < 7; j++)
                 {
-                    Console.Write($" {TheBoardList[j].DisplayRow(6-i-1)} ");
+                    if( TheBoardList[j].DisplayRow(6 - i - 1) == 'X')
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.Write($" {TheBoardList[j].DisplayRow(6-i-1)} ");
+                        Console.ResetColor();
+                    }
+                    else if( TheBoardList[j].DisplayRow(6 - i - 1) == 'O')
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write($" {TheBoardList[j].DisplayRow(6 - i - 1)} ");
+                        Console.ResetColor();
+                    }else Console.Write($" {TheBoardList[j].DisplayRow(6 - i - 1)} ");
                 }
                 Console.WriteLine("|");
             }
             Console.WriteLine("  1  2  3  4  5  6  7 \n");
-            Referee.RecieveBoard(TheBoardList);
+            //Referee.RecieveBoard(TheBoardList);
             //Referee.RowCheck();
         }  
     } 
@@ -249,7 +256,6 @@ namespace Sutham_Connect4_Game
             { '#', '#', '#', '#', '#', '#', '#' },
             { '#', '#', '#', '#', '#', '#', '#' }
             };
-
         public static void RecieveBoard(List<TheColumn> board)
         {
             for (int i = 0; i < 6; i++)
@@ -270,39 +276,75 @@ namespace Sutham_Connect4_Game
                 Xcounter = 0;
                 for (int j = 0; j < 7; j++)
                 {
-                    if (j == 0)
-                    {                        
-                        if (TheBoardArr[i, j] == 'O')
+
+                    if (TheBoardArr[6 - i - 1, j] == 'O')
+                    {
+                        Ocounter++;
+                        if (Ocounter == 4)
                         {
-                            Ocounter++;
-                        }
-                        else if (TheBoardArr[i, j] == 'X')
-                        {
-                            Xcounter++;
+                            Console.WriteLine("O Win Row");
+                            return true;
                         }
                     }
-                    else if (j > 0 )
+                    else if (TheBoardArr[6 - i - 1, j] == 'X')
+                    {
+                        Xcounter++;
+                        if (Xcounter == 4)
+                        {
+                            Console.WriteLine("X Win Row");
+                            return true;
+                        }
+                    }
+                    else if (TheBoardArr[6 - i - 1, j] == '#')
+                    {
+                        Ocounter = 0;
+                        Xcounter = 0;
+                    }
+
+/*
+                    else if (j< 6)
                     {
                         if (TheBoardArr[i,j] == 'O')
                         {
-                            if (TheBoardArr[i,j-1] == 'X')
+                            if (TheBoardArr[i, j - 1] == 'O' && TheBoardArr[i, j + 1] == 'O')
+                                Ocounter++;// = 1;
+                            else 
+                                Ocounter=1;
+                        }
+                        else if (TheBoardArr[i,j] == 'X')
+                        {
+                            if (TheBoardArr[i, j - 1] == 'X' && TheBoardArr[i, j + 1] == 'X')
+                                Xcounter++;// = 1;
+                            else
+                                Xcounter = 1;
+                        }
+                    }
+                    else if ((j == 6))
+                    {
+                        if (TheBoardArr[i, j] == 'O')
+                        {
+                            if (TheBoardArr[i, j - 1]  == 'O')
+                                Ocounter++;// = 1;
+                            else
                                 Ocounter = 1;
-                            else Ocounter++;
                         }
                         else if (TheBoardArr[i, j] == 'X')
                         {
-                            if(TheBoardArr[i, j-1] == 'O')
+                            if (TheBoardArr[i, j - 1] == 'X' )
+                                Xcounter++;// = 1;
+                            else
                                 Xcounter = 1;
-                            else Xcounter++;
                         }
                     }
-                }
-                if (Xcounter == 4 || Ocounter == 4)
-                {
-                    if(Xcounter==4)Console.WriteLine("X Win Row");
-                    else if(Ocounter == 4) Console.WriteLine("O Win Row");
-                    return true;                    
-                }
+*/
+
+               }
+              //  if (Xcounter == 4 || Ocounter == 4)
+              //  {
+              //      if(Xcounter==4)Console.WriteLine("X Win Row");
+              //      else if(Ocounter == 4) Console.WriteLine("O Win Row");
+              //      return true;                    
+               // }
             }           
             return false;
         }
@@ -331,13 +373,13 @@ namespace Sutham_Connect4_Game
                     {
                         if (TheBoardArr[j, i] == 'O')
                         {
-                            if (TheBoardArr[j-1,i] == 'X')
+                            if (TheBoardArr[j-1,i] != 'O')
                                 Ocounter = 1;
                             else Ocounter++;
                         }
-                        else if (TheBoardArr[j-1, i] == 'X')
+                        else if (TheBoardArr[j, i] == 'X')
                         {
-                            if (TheBoardArr[j-1, i] == 'O')
+                            if (TheBoardArr[j-1, i] != 'X')
                                 Xcounter = 1;
                             else Xcounter++;
                         }
@@ -353,57 +395,59 @@ namespace Sutham_Connect4_Game
             return false;
         }
         public static bool DiagonalCheck()
-        {
+        {  
             int Ocounter = 0;
             int Xcounter = 0;
             for (int i = 0; i < 6 ; i++)
-            {
-                //Ocounter = 0;
-                //Xcounter = 0;
+            {                
                 for (int j = 0; j <  7; j++)
                 {
                     if (i == j)
-                    {
-                        
+                    {                        
                         if (i == 0)
-                        {
-                            //Console.WriteLine("3");
+                        {                           
                             if (TheBoardArr[6-i-1, j] == 'O')
                             {
-                                Ocounter++;
-                                Console.WriteLine("5");
+                                Ocounter++;                               
                             }
                             else if (TheBoardArr[6 - i - 1, j] == 'X')
                             {
-                                Xcounter++;
-                                Console.WriteLine("6");
+                                Xcounter++;                               
                             }
                         }
                         else if (i > 0)
-                        {
-                            
+                        {                            
                             if (TheBoardArr[6 - i - 1, j] == 'O')
                             {
-                                if (TheBoardArr[6 - i - 1 , j - 1] == 'X')
+                                if (TheBoardArr[6 - i - 1 , j - 1] != 'O')
                                     Ocounter = 1;
                                 else Ocounter++;
                             }
                             else if (TheBoardArr[6 - i - 1, j] == 'X')
                             {
-                                if (TheBoardArr[6 - i - 1 , j - 1] == 'O')
+                                if (TheBoardArr[6 - i - 1 , j - 1] != 'X')
                                     Xcounter = 1;
                                 else Xcounter++;
                             }
                         }
                     }
-                }                
-            }
-            if (Xcounter == 4 || Ocounter == 4)
-            {
-                if (Xcounter == 4) Console.WriteLine("X Win Diagonal");
-                else if (Ocounter == 4) Console.WriteLine("O Win Diagonal");
-                return true;
-            }
+
+
+
+
+
+
+                }
+                if (Xcounter == 4 || Ocounter == 4)
+                {
+                    if (Xcounter == 4) Console.WriteLine("X Win Diagonal");
+                    else if (Ocounter == 4) Console.WriteLine("O Win Diagonal");
+                    return true;
+                }
+            }          
+            Ocounter = 0;
+            Xcounter = 0;
+
             return false;
         }
     }
@@ -412,11 +456,58 @@ namespace Sutham_Connect4_Game
         static void Main(string[] args)
         {
             string name1,name2;
-            Console.WriteLine("Welcome to Sutham's Connect4Game");
-            Console.Write("Please enter player 1's name: ");
+            //Console.ForegroundColor = ConsoleColor.;
+            
+            string[] str = new string[]
+            {
+                "                                               ",
+                "   _________   _________  __        ________   ",
+                "  /        /| /       /| / /|      /       /|  ",
+                "  $$$$$$$$$/  $$$$$$$$/| $$ |      $$$$$$$$/   ",
+                "  $$ | /   /| $$    $$ | $$ |      $$ |___     ",
+                "  $$ | $$$$ | $$    $$ | $$ |      $$/   /|    ",
+                "  $$ /   $$ | $$    $$ | $$ |_____ $$$$$$/     ",
+                "  $$/    $$ | $$    $$ | $$/    /| $$ /        ",
+                "  $$$$$$$$$/  $$$$$$$$/  $$$$$$$/  $$/         "
+            };
+            var index = 3;
+            foreach (var item in str)
+            {
+                for (int i = 0; i < item.Length; i++)
+                {
+                    Console.Write(item[i]);
+                    Console.ForegroundColor = (ConsoleColor)index;
+                    index++;
+                    if (index == 15)
+                        index = 3;
+                    if (i == item.Length - 1)
+                    {
+                        Console.Write("\n");
+                        continue;
+                    }
+                }
+            }
+            /*     Console.ForegroundColor = ConsoleColor.Green;
+                 for (int i = 0; i < str.Length; i++)
+                 {
+                     for (int j = 0; j < str[i].Length; j++)
+                     {
+                         if (i >= 4 && i < 7 && j > 3 && j < 5)
+                         {
+                             Console.ForegroundColor = ConsoleColor.Blue;
+                         }
+                         Console.Write(str[i][j]);
+                     }
+                     Console.WriteLine();
+                 }
+              */
+            Console.ResetColor();        
+            Console.WriteLine("\n   Welcome to Sutham's Connect4Game");            
+          
+            Console.Write("   Please enter player 1's name: ");
             name1 = Console.ReadLine();
             var PlayerOne = new Player(name1);           
-            Console.Write("Please enter player 2's name: ");
+            Console.Write("   Please enter player 2's name: ");
             name2 = Console.ReadLine();
             var PlayerTwo = new Player(name2);
             Connect4Game.AddAPlayer(name1);
@@ -430,8 +521,6 @@ namespace Sutham_Connect4_Game
                 
             //}              
             //while( Referee.ColumnCheck() || Referee.RowCheck() );
-
-
 
         }
     }
