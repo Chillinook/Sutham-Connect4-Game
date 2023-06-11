@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography.X509Certificates;
@@ -26,24 +27,61 @@ namespace Sutham_Connect4_Game
 
     }
  
-    public class Tracker
+    public class InputTracker
     {
+        public List<string> PlayerTracker;  
         public string Name { get; set; }
-        public int SlotIn { get; set; }
+        public int TurnCounter { get; set; } = 0;
 
-        public Tracker()
+        //public int SlotIn { get; set; } 
+
+        public InputTracker()
         {
-            
+            var PlayerTracker = new List<string>();
         }
-
-        private void Inputchecher()
-        { 
-        
-        
-        
+        public void PlusCounter()
+        {
+            TurnCounter++;
+            //Console.WriteLine(TurnCounter);
         }
+        public int InputProof(string inkey)
+        {
+            int _keyinput;
+            if ((int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7))
+            {
+                PlusCounter();
+                return int.Parse(inkey);
+            }
+            else 
+            {            
+                while( !(int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7) )
+                {
+                    Console.Write("please enter only number(1 - 7): ");
+                    //inkey = "";
+                    inkey = Console.ReadLine();
+                }
+                PlusCounter();
+                int _tempPos = int.Parse(inkey);
+                return _tempPos;
+            }      
+          //   else //(int.Parse(inkey) == 1 || int.Parse(inkey) == 2 || int.Parse(inkey) == 3 || int.Parse(inkey) == 4 || int.Parse(inkey) == 5 || int.Parse(inkey) == 6 || int.Parse(inkey) == 7)
+          //  {
+          //      //int _tempPos = int.Parse(inkey);
+          //      PlusCounter();
+          //      return int.Parse(inkey);
+
+           // }
+
+        }
+        public void RecordSuccessInput()
+        {
+            if (TurnCounter == 43)
+            {
 
 
+            }
+
+        }
 
     }
     public class TheColumn
@@ -68,7 +106,6 @@ namespace Sutham_Connect4_Game
                 chars.Add('X');                
             }
         }
-
         public void InsertO()
         {
             if (insertcheck())
@@ -78,6 +115,8 @@ namespace Sutham_Connect4_Game
                 chars.Add('O');               
             }
         }
+
+        /*
         public void DisplayOne()
         {
             if (Checker() == 6)
@@ -109,6 +148,7 @@ namespace Sutham_Connect4_Game
             }
            
         }
+        */
 
         public char DisplayRow(int position)
         {
@@ -157,15 +197,15 @@ namespace Sutham_Connect4_Game
     }
     public class Connect4Game
     {
-        public static List<Tracker> GameTracker; 
-
+        public static InputTracker GameTracker; 
         public static List<TheColumn> TheBoardList; 
         private static List<Player> playerList;
         public static int turncount = 1;
         static bool answer;
         static Connect4Game()
         {
-            playerList = new List<Player>();
+            GameTracker = new InputTracker();
+            playerList = new List<Player>();            
             TheBoardList = new List<TheColumn>();
             TheBoardList.Add(new TheColumn());
             TheBoardList.Add(new TheColumn());
@@ -180,46 +220,71 @@ namespace Sutham_Connect4_Game
         {
             var player = new Player(name);
             playerList.Add(player);
+            
         }     
         public bool Checker(char checkNum)
-        {
+        {            
             return true;
         }
         public static bool Play()
         {
             Referee.RecieveBoard(TheBoardList);
+            DisplayBoard();
+            GameTracker.PlusCounter();
             if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
                 return false;
             }
+            else if (GameTracker.TurnCounter==43)
+            {
+                Console.WriteLine("It is a draw, and no one wins. ");
+                return false;
+            }
+         
             if (turncount % 2 == 0)
             {
-                //DisplayBoard();
-                Console.Write($"Player >> {playerList[1]} << symbol X please enter slot number(1-7): ");
-                int _tempPos = int.Parse(Console.ReadLine());
-                TheBoardList[_tempPos - 1].InsertX();
-                DisplayBoard();
+                
+                Console.Write($"Player >>");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write($" {playerList[1]} ");
+                Console.ResetColor();
+                Console.Write("<< symbol X please enter slot number(1-7): ");
+                string _tempPos = (Console.ReadLine());
+                //GameTracker.InputProof(_tempPos);
+                TheBoardList[GameTracker.InputProof(_tempPos) - 1].InsertX();         
                 turncount++;
                 return true;
             }
             else 
-            {
-                //DisplayBoard();
-                Console.Write($"Player >> {playerList[0]} << symbol O please enter slot number(1-7): ");
+            {               
+                Console.Write($"Player >>");
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write($" {playerList[0]} ");
+                Console.ResetColor();
+                Console.Write("<< symbol O please enter slot number(1-7): ");
+
                 int _tempPos = int.Parse(Console.ReadLine());
+                
                 TheBoardList[_tempPos - 1].InsertO();
-                DisplayBoard();
+                
+             
                 turncount++;
                 return true;              
             }            
-        }        
+        }
 
-        public static void DisplayBoard()
+        public static bool Play(bool end)
         {
+            return false;
+        }
+
+            public static void DisplayBoard()
+            {
+           
             Console.Clear();       
             Console.WriteLine("Sutham's Connect4Game");
-            Console.WriteLine($" {playerList[0]} VS {playerList[1]}\n");
-            //Referee.RecieveBoard(TheBoardList);
+            Console.WriteLine($"    {playerList[0]} VS {playerList[1]}\n");
+           
             for (int i = 0; i < 6 ; i++)
             {
                 Console.Write("|");
@@ -240,9 +305,7 @@ namespace Sutham_Connect4_Game
                 }
                 Console.WriteLine("|");
             }
-            Console.WriteLine("  1  2  3  4  5  6  7 \n");
-            //Referee.RecieveBoard(TheBoardList);
-            //Referee.RowCheck();
+            Console.WriteLine("  1  2  3  4  5  6  7 \n");            
         }  
     } 
 
@@ -345,57 +408,67 @@ namespace Sutham_Connect4_Game
             return false;
         }
         public static bool DiagonalCheck()
-        {  
-            int Ocounter = 0;
-            int Xcounter = 0;
-            //int counter = 3;
+        {
+            int Ocounter;
+            int Xcounter;         
 
             for (int counter = 3; counter < 9; counter++)
             {
+                Ocounter = 0;
+                Xcounter = 0;
                 for (int i = 0; i < 6; i++)
                 {
                     for (int j = 0; j < 7; j++)
                     {
                         if (i + j == counter)
                         {
-                            if (TheBoardArr[i,j] == 'O')
+                            if (TheBoardArr[6 - i - 1, j] == '#')
+                            {
+                                Ocounter = 0;
+                                Xcounter = 0;
+                            }
+                            else if (TheBoardArr[6 - i - 1,j] == 'O')
                             {
                                 Ocounter++;
                                 Xcounter = 0;
                                 if (Ocounter == 4)
                                 {
-                                    Console.WriteLine("O Win Diagonal");
+                                    Console.WriteLine("OO Win Diagonal");
                                     return true;
                                 }
                             }
-                            else if (TheBoardArr[i,j] == 'X')
+                            else if (TheBoardArr[6 - i - 1,j] == 'X')
                             {
                                 Xcounter++;
                                 Ocounter = 0;
                                 if (Xcounter == 4)
                                 {
-                                    Console.WriteLine("X Win Diagonal");
+                                    Console.WriteLine("XX Win Diagonal");
                                     return true;
                                 }
                             }
-                            else if (TheBoardArr[i,j] == '#')
-                            {
-                                Ocounter = 0;
-                                Xcounter = 0;
-                            }
+                            
                         }
                     }
                 }
             }
+            
             for (int counter = -3; counter < 3; counter++)
             {
+                Ocounter = 0;
+                Xcounter = 0;
                 for (int i = 0; i < 6; i++)
                 {
                     for (int j = 0; j < 7; j++)
                     {
                         if (i - j == counter)
                         {
-                            if (TheBoardArr[i, j] == 'O')
+                            if (TheBoardArr[6-i-1, j] == '#')
+                            {
+                                Ocounter = 0;
+                                Xcounter = 0;
+                            }
+                            else if (TheBoardArr[6 - i - 1, j] == 'O')
                             {
                                 Ocounter++;
                                 Xcounter = 0;
@@ -405,7 +478,7 @@ namespace Sutham_Connect4_Game
                                     return true;
                                 }
                             }
-                            else if (TheBoardArr[i, j] == 'X')
+                            else if (TheBoardArr[6 - i - 1, j] == 'X')
                             {
                                 Xcounter++;
                                 Ocounter = 0;
@@ -415,61 +488,11 @@ namespace Sutham_Connect4_Game
                                     return true;
                                 }
                             }
-                            else if (TheBoardArr[i, j] == '#')
-                            {
-                                Ocounter = 0;
-                                Xcounter = 0;
-                            }
+                         
                         }
                     }
                 }
             }
-
-
-            /*        for (int i = 0; i < 6 ; i++)
-                    {                
-                        for (int j = 0; j <  7; j++)
-                        {
-                            if (i == j)
-                            {                        
-                                if (i == 0)
-                                {                           
-                                    if (TheBoardArr[6-i-1, j] == 'O')
-                                    {
-                                        Ocounter++;                               
-                                    }
-                                    else if (TheBoardArr[6 - i - 1, j] == 'X')
-                                    {
-                                        Xcounter++;                               
-                                    }
-                                }
-                                else if (i > 0)
-                                {                            
-                                    if (TheBoardArr[6 - i - 1, j] == 'O')
-                                    {
-                                        if (TheBoardArr[6 - i - 1 , j - 1] != 'O')
-                                            Ocounter = 1;
-                                        else Ocounter++;
-                                    }
-                                    else if (TheBoardArr[6 - i - 1, j] == 'X')
-                                    {
-                                        if (TheBoardArr[6 - i - 1 , j - 1] != 'X')
-                                            Xcounter = 1;
-                                        else Xcounter++;
-                                    }
-                                }
-                            }
-
-                        }
-                        if (Xcounter == 4 || Ocounter == 4)
-                        {
-                            if (Xcounter == 4) Console.WriteLine("X Win Diagonal");
-                            else if (Ocounter == 4) Console.WriteLine("O Win Diagonal");
-                            return true;
-                        }
-                    }          
-            */
-
             return false;
         }
     }
@@ -535,7 +558,21 @@ namespace Sutham_Connect4_Game
             Connect4Game.AddAPlayer(name1);
             Connect4Game.AddAPlayer(name2);
             Connect4Game.DisplayBoard();
-            while (Connect4Game.Play()); 
+
+
+
+  //          string input;
+ //           while ( (input = Console.ReadLine() ) != "Y")
+  //          {
+  //              Connect4Game.Play();
+
+  //          }
+
+            while (Connect4Game.Play())
+            { 
+                   
+            
+            }
            
             //do
             //{
