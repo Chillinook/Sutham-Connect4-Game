@@ -276,10 +276,10 @@ namespace Sutham_Connect4_Game
                 Xcounter = 0;
                 for (int j = 0; j < 7; j++)
                 {
-
                     if (TheBoardArr[6 - i - 1, j] == 'O')
                     {
                         Ocounter++;
+                        Xcounter=0;
                         if (Ocounter == 4)
                         {
                             Console.WriteLine("O Win Row");
@@ -289,6 +289,7 @@ namespace Sutham_Connect4_Game
                     else if (TheBoardArr[6 - i - 1, j] == 'X')
                     {
                         Xcounter++;
+                        Ocounter = 0;
                         if (Xcounter == 4)
                         {
                             Console.WriteLine("X Win Row");
@@ -299,52 +300,8 @@ namespace Sutham_Connect4_Game
                     {
                         Ocounter = 0;
                         Xcounter = 0;
-                    }
-
-/*
-                    else if (j< 6)
-                    {
-                        if (TheBoardArr[i,j] == 'O')
-                        {
-                            if (TheBoardArr[i, j - 1] == 'O' && TheBoardArr[i, j + 1] == 'O')
-                                Ocounter++;// = 1;
-                            else 
-                                Ocounter=1;
-                        }
-                        else if (TheBoardArr[i,j] == 'X')
-                        {
-                            if (TheBoardArr[i, j - 1] == 'X' && TheBoardArr[i, j + 1] == 'X')
-                                Xcounter++;// = 1;
-                            else
-                                Xcounter = 1;
-                        }
-                    }
-                    else if ((j == 6))
-                    {
-                        if (TheBoardArr[i, j] == 'O')
-                        {
-                            if (TheBoardArr[i, j - 1]  == 'O')
-                                Ocounter++;// = 1;
-                            else
-                                Ocounter = 1;
-                        }
-                        else if (TheBoardArr[i, j] == 'X')
-                        {
-                            if (TheBoardArr[i, j - 1] == 'X' )
-                                Xcounter++;// = 1;
-                            else
-                                Xcounter = 1;
-                        }
-                    }
-*/
-
-               }
-              //  if (Xcounter == 4 || Ocounter == 4)
-              //  {
-              //      if(Xcounter==4)Console.WriteLine("X Win Row");
-              //      else if(Ocounter == 4) Console.WriteLine("O Win Row");
-              //      return true;                    
-               // }
+                    }      
+                }            
             }           
             return false;
         }
@@ -358,39 +315,32 @@ namespace Sutham_Connect4_Game
                 Xcounter = 0;
                 for (int j = 0; j < 6; j++)
                 {
-                    if (j == 0)
+                    if (TheBoardArr[j,i ] == 'O')
                     {
-                        if (TheBoardArr[j,i ] == 'O')
+                        Ocounter++;
+                        Xcounter = 0;
+                        if (Ocounter == 4)
                         {
-                            Ocounter++;
-                        }
-                        else if (TheBoardArr[j,i] == 'X')
-                        {
-                            Xcounter++;
+                            Console.WriteLine("O Win Column");
+                            return true;
                         }
                     }
-                    else if (j > 0)
+                    else if (TheBoardArr[j,i] == 'X')
                     {
-                        if (TheBoardArr[j, i] == 'O')
+                        Xcounter++;
+                        Ocounter= 0;
+                        if (Xcounter == 4)
                         {
-                            if (TheBoardArr[j-1,i] != 'O')
-                                Ocounter = 1;
-                            else Ocounter++;
-                        }
-                        else if (TheBoardArr[j, i] == 'X')
-                        {
-                            if (TheBoardArr[j-1, i] != 'X')
-                                Xcounter = 1;
-                            else Xcounter++;
+                            Console.WriteLine("X Win Column");
+                            return true;
                         }
                     }
-                }
-                if (Xcounter == 4 || Ocounter == 4)
-                {
-                    if (Xcounter == 4) Console.WriteLine("X Win Column");
-                    else if (Ocounter == 4) Console.WriteLine("O Win Column");
-                    return true;
-                }
+                    else if (TheBoardArr[j,i] == '#')
+                    {
+                        Ocounter = 0;
+                        Xcounter = 0;
+                    }
+                }             
             }
             return false;
         }
