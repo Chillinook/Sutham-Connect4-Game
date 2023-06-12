@@ -41,13 +41,12 @@ namespace Sutham_Connect4_Game
         }
         public void PlusCounter()
         {
-            TurnCounter++;
-            //Console.WriteLine(TurnCounter);
+            TurnCounter++;            
         }
         public int InputProof(string inkey)
         {
             int _keyinput;
-            if ((int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7))
+            if ( (int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7) )
             {
                 PlusCounter();
                 return int.Parse(inkey);
@@ -56,22 +55,13 @@ namespace Sutham_Connect4_Game
             {            
                 while( !(int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7) )
                 {
-                    Console.Write("please enter only number(1 - 7): ");
-                    //inkey = "";
+                    Console.Write("please enter only number(1 - 7): ");                    
                     inkey = Console.ReadLine();
                 }
                 PlusCounter();
                 int _tempPos = int.Parse(inkey);
                 return _tempPos;
-            }      
-          //   else //(int.Parse(inkey) == 1 || int.Parse(inkey) == 2 || int.Parse(inkey) == 3 || int.Parse(inkey) == 4 || int.Parse(inkey) == 5 || int.Parse(inkey) == 6 || int.Parse(inkey) == 7)
-          //  {
-          //      //int _tempPos = int.Parse(inkey);
-          //      PlusCounter();
-          //      return int.Parse(inkey);
-
-           // }
-
+            }           
         }
         public void RecordSuccessInput()
         {
@@ -230,12 +220,12 @@ namespace Sutham_Connect4_Game
         {
             Referee.RecieveBoard(TheBoardList);
             DisplayBoard();
-            GameTracker.PlusCounter();
+            //GameTracker.PlusCounter();
             if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
                 return false;
             }
-            else if (GameTracker.TurnCounter==43)
+            else if (GameTracker.TurnCounter==42)
             {
                 Console.WriteLine("It is a draw, and no one wins. ");
                 return false;
@@ -262,12 +252,9 @@ namespace Sutham_Connect4_Game
                 Console.Write($" {playerList[0]} ");
                 Console.ResetColor();
                 Console.Write("<< symbol O please enter slot number(1-7): ");
-
-                int _tempPos = int.Parse(Console.ReadLine());
+                string _tempPos = (Console.ReadLine());
                 
-                TheBoardList[_tempPos - 1].InsertO();
-                
-             
+                TheBoardList[GameTracker.InputProof(_tempPos) - 1].InsertO();            
                 turncount++;
                 return true;              
             }            
@@ -277,7 +264,6 @@ namespace Sutham_Connect4_Game
         {
             return false;
         }
-
             public static void DisplayBoard()
             {
            
