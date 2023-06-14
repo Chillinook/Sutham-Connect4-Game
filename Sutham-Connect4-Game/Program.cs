@@ -29,14 +29,14 @@ namespace Sutham_Connect4_Game
  
     public class InputTracker
     {
-        public List<string> PlayerTracker;  
-        public string Name { get; set; }
+       // public List<string> PlayerTracker;  
+       // public string Name { get; set; }
         public int TurnCounter { get; set; } = 0;
        
-        public InputTracker()
-        {
-             PlayerTracker = new List<string>();
-        }
+    //    public InputTracker()
+    //    {
+            // PlayerTracker = new List<string>();
+     //   }
         public void PlusCounter()
         {
             TurnCounter++;            
@@ -54,18 +54,11 @@ namespace Sutham_Connect4_Game
                 inkey = Console.ReadLine();
             } while ( true );  
         }
+     //   public void RecordSuccessInput()
+     //   {
+      //     PlayerTracker.Add(Name);
 
-        public void SlotProof()
-        {
-
-
-
-        }
-        public void RecordSuccessInput()
-        {
-           PlayerTracker.Add(Name);
-
-        }
+      //  }
 
     }
     public class TheColumn
@@ -81,34 +74,18 @@ namespace Sutham_Connect4_Game
                 return false;
             else
             {
-                Console.WriteLine("This slot is full. Please try select another slot");
+                Console.Write("This slot is full. Please try select another slot: ");
                 return true;
             }
                 
         }
         public void InsertX()
-        {
-            if (Insertcheck())
-            {
-                //Console.WriteLine("This slot is full. Please try select another slot");      
-                //Console.ReadLine();
-            }
-            else
-            {
-                chars.Add('X');
-            }
+        {           
+                chars.Add('X');           
         }
         public void InsertO()
-        {
-            if (Insertcheck())
-            { 
-                //Console.WriteLine("This slot is full");
-                //Console.ReadLine();
-            }
-            else
-            {
-                chars.Add('O');               
-            }
+        {        
+                chars.Add('O');             
         }  
 
         public char DisplayRow(int position)
@@ -140,14 +117,7 @@ namespace Sutham_Connect4_Game
         {
             return chars.Count();
         }
-        public bool Checker()
-        {
-            if (chars.Count == 6)
-            {
-                return false;
-            }
-            else { return true; }
-        }
+  
         public override string ToString()
         {          
             return chars.ToString();
@@ -156,12 +126,12 @@ namespace Sutham_Connect4_Game
     }
     public class Connect4Game
     {
-        public static InputTracker GameTracker; 
-        private static List<TheColumn> TheBoardList; 
-        private static List<Player> playerList;
-        public static int turncount = 1;
-        static bool answer;
-        static Connect4Game()
+        public  InputTracker GameTracker; 
+        private List<TheColumn> TheBoardList; 
+        private List<Player> playerList;
+        public int turncount = 1;
+        //static bool answer;
+        public Connect4Game()
         {
             GameTracker = new InputTracker();
             playerList = new List<Player>();            
@@ -175,17 +145,14 @@ namespace Sutham_Connect4_Game
             TheBoardList.Add(new TheColumn());
         }           
 
-        public static void AddAPlayer(string name)
+        public void AddAPlayer(string name)
         {
             var player = new Player(name);
             playerList.Add(player);
             
         }     
-        public bool Checker(char checkNum)
-        {            
-            return true;
-        }
-        public static bool Play()
+
+        public bool Play()
         {
             Referee.RecieveBoard(TheBoardList);
             DisplayBoard();
@@ -208,13 +175,10 @@ namespace Sutham_Connect4_Game
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($" {playerList[1]} ");
                 Console.ResetColor();
-                Console.Write("<< symbol X please enter slot number(1-7): ");
-                // string _tempPos = (Console.ReadLine());
-
+                Console.Write("<< symbol X please enter slot number(1-7): ");          
                 do
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
-
                 TheBoardList[_goodinput].InsertX();  
                 turncount++;
                 GameTracker.PlusCounter();
@@ -227,32 +191,26 @@ namespace Sutham_Connect4_Game
                 Console.Write($" {playerList[0]} ");
                 Console.ResetColor();
                 Console.Write("<< symbol O please enter slot number(1-7): ");
-                /*    do
-                    {
-                        string _tempPos = (Console.ReadLine());
-                        goodinput = GameTracker.InputProof(_tempPos);
-
-                    } while ( (TheBoardList[goodinput - 1].Checker() ) );
-                */
-                string _tempPos = (Console.ReadLine());
-                TheBoardList[GameTracker.InputProof(_tempPos) - 1].InsertO();
-                //TheBoardList[goodinput - 1].InsertO();
+                do
+                    _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
+                while (TheBoardList[_goodinput].Insertcheck());
+                TheBoardList[_goodinput].InsertO();             
                 turncount++;
                 GameTracker.PlusCounter();
                 return true;              
             }            
         }
 
-        public static bool Play(bool end)
+        public bool Play(bool end)
         {
             return false;
         }
-            public static void DisplayBoard()
-            {
+        public void DisplayBoard()
+        {
            
-            Console.Clear();       
-            Console.WriteLine("Sutham's Connect4Game");
-            Console.WriteLine($"    {playerList[0]} VS {playerList[1]}\n");
+        Console.Clear();       
+        Console.WriteLine("Sutham's Connect4Game");
+        Console.WriteLine($"    {playerList[0]} VS {playerList[1]}\n");
            
             for (int i = 0; i < 6 ; i++)
             {
@@ -524,23 +482,18 @@ namespace Sutham_Connect4_Game
             Console.Write("   Please enter player 2's name: ");
             name2 = Console.ReadLine();
             var PlayerTwo = new Player(name2);
-            Connect4Game.AddAPlayer(name1);
-            Connect4Game.AddAPlayer(name2);
-            Connect4Game.DisplayBoard();
 
+            var GolfConnect4 = new Connect4Game();
 
+            GolfConnect4.AddAPlayer(name1);
+            GolfConnect4.AddAPlayer(name2);
+            GolfConnect4.DisplayBoard();
 
-  //          string input;
- //           while ( (input = Console.ReadLine() ) != "Y")
-  //          {
-  //              Connect4Game.Play();
-
-  //          }
-
-            while (Connect4Game.Play())
-            { 
-                   
-            
+            string reset = null;
+            while ( GolfConnect4.Play() || reset.ToUpper() == "Y")
+            {
+                //Console.Write("Restart? Yes(Y) or No(N): ");
+                //reset = Console.ReadLine();
             }
            
             //do
