@@ -32,12 +32,10 @@ namespace Sutham_Connect4_Game
         public List<string> PlayerTracker;  
         public string Name { get; set; }
         public int TurnCounter { get; set; } = 0;
-
-        //public int SlotIn { get; set; } 
-
+       
         public InputTracker()
         {
-            var PlayerTracker = new List<string>();
+             PlayerTracker = new List<string>();
         }
         public void PlusCounter()
         {
@@ -45,31 +43,27 @@ namespace Sutham_Connect4_Game
         }
         public int InputProof(string inkey)
         {
-            int _keyinput;
-            if ( (int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7) )
+            int _keyinput=0;
+            do
             {
-                PlusCounter();
-                return int.Parse(inkey);
-            }
-            else 
-            {            
-                while( !(int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7) )
+                if ((int.TryParse(inkey, out _keyinput) && _keyinput >= 1 && _keyinput <= 7))
                 {
-                    Console.Write("please enter only number(1 - 7): ");                    
-                    inkey = Console.ReadLine();
+                   return int.Parse(inkey);
                 }
-                PlusCounter();
-                int _tempPos = int.Parse(inkey);
-                return _tempPos;
-            }           
+                Console.Write("Please enter only number(1 - 7): ");
+                inkey = Console.ReadLine();
+            } while ( true );  
+        }
+
+        public void SlotProof()
+        {
+
+
+
         }
         public void RecordSuccessInput()
         {
-            if (TurnCounter == 43)
-            {
-
-
-            }
+           PlayerTracker.Add(Name);
 
         }
 
@@ -81,64 +75,41 @@ namespace Sutham_Connect4_Game
         {
             chars = new List<char>();
         }
-        private bool insertcheck()
+        public bool Insertcheck()
         {
-            if (chars.Count == 6)
+            if (chars.Count >= 0 && chars.Count < 6)
+                return false;
+            else
+            {
+                Console.WriteLine("This slot is full. Please try select another slot");
                 return true;
-            else return false;
+            }
+                
         }
         public void InsertX()
         {
-            if(insertcheck())
-                Console.WriteLine("This slot is full");
+            if (Insertcheck())
+            {
+                //Console.WriteLine("This slot is full. Please try select another slot");      
+                //Console.ReadLine();
+            }
             else
             {
-                chars.Add('X');                
+                chars.Add('X');
             }
         }
         public void InsertO()
         {
-            if (insertcheck())
-                Console.WriteLine("This slot is full");
+            if (Insertcheck())
+            { 
+                //Console.WriteLine("This slot is full");
+                //Console.ReadLine();
+            }
             else
             {
                 chars.Add('O');               
             }
-        }
-
-        /*
-        public void DisplayOne()
-        {
-            if (Checker() == 6)
-            {
-                
-                for (int i = 0; i < 6; i++)
-                {
-                    Console.WriteLine($" {chars[chars.Count - i - 1]} ");
-                }
-            }
-            else if (Checker() == 0)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    Console.WriteLine(" # ");
-                }
-            }
-           
-            else if(Checker() < 6 )
-            {                
-                for (int i = 0 ; i < 6 - chars.Count; i++)
-                {
-                    Console.WriteLine(" # ");
-                }
-                for (int i = 0 ; i< chars.Count ; i++)
-                {
-                    Console.WriteLine($" {chars[chars.Count-i-1]} ");
-                }                
-            }
-           
-        }
-        */
+        }  
 
         public char DisplayRow(int position)
         {
@@ -169,16 +140,14 @@ namespace Sutham_Connect4_Game
         {
             return chars.Count();
         }
-        public int Checker()
+        public bool Checker()
         {
             if (chars.Count == 6)
             {
-                return 6;
+                return false;
             }
-            else { return chars.Count; }
-
+            else { return true; }
         }
-
         public override string ToString()
         {          
             return chars.ToString();
@@ -188,7 +157,7 @@ namespace Sutham_Connect4_Game
     public class Connect4Game
     {
         public static InputTracker GameTracker; 
-        public static List<TheColumn> TheBoardList; 
+        private static List<TheColumn> TheBoardList; 
         private static List<Player> playerList;
         public static int turncount = 1;
         static bool answer;
@@ -220,7 +189,8 @@ namespace Sutham_Connect4_Game
         {
             Referee.RecieveBoard(TheBoardList);
             DisplayBoard();
-            //GameTracker.PlusCounter();
+            int _goodinput;
+            //int _keyinput;
             if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
                 return false;
@@ -233,16 +203,21 @@ namespace Sutham_Connect4_Game
          
             if (turncount % 2 == 0)
             {
-                
+               
                 Console.Write($"Player >>");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($" {playerList[1]} ");
                 Console.ResetColor();
                 Console.Write("<< symbol X please enter slot number(1-7): ");
-                string _tempPos = (Console.ReadLine());
-                //GameTracker.InputProof(_tempPos);
-                TheBoardList[GameTracker.InputProof(_tempPos) - 1].InsertX();         
+                // string _tempPos = (Console.ReadLine());
+
+                do
+                    _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
+                while (TheBoardList[_goodinput].Insertcheck());
+
+                TheBoardList[_goodinput].InsertX();  
                 turncount++;
+                GameTracker.PlusCounter();
                 return true;
             }
             else 
@@ -252,10 +227,18 @@ namespace Sutham_Connect4_Game
                 Console.Write($" {playerList[0]} ");
                 Console.ResetColor();
                 Console.Write("<< symbol O please enter slot number(1-7): ");
+                /*    do
+                    {
+                        string _tempPos = (Console.ReadLine());
+                        goodinput = GameTracker.InputProof(_tempPos);
+
+                    } while ( (TheBoardList[goodinput - 1].Checker() ) );
+                */
                 string _tempPos = (Console.ReadLine());
-                
-                TheBoardList[GameTracker.InputProof(_tempPos) - 1].InsertO();            
+                TheBoardList[GameTracker.InputProof(_tempPos) - 1].InsertO();
+                //TheBoardList[goodinput - 1].InsertO();
                 turncount++;
+                GameTracker.PlusCounter();
                 return true;              
             }            
         }
