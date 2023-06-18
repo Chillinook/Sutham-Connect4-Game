@@ -13,12 +13,23 @@ using System.Xml.Linq;
 
 namespace Sutham_Connect4_Game
 {
-    public class Player
+
+
+    public abstract class Person
     {
         public string Name { get; set; }
-        public Player(string name)
+
+    }
+    public class Player : Person
+    {
+        //public string Name { get; set; }
+        //  public Player()//(string name)
+        //   {
+        //      Name = name.Substring(0,1).ToUpper() + name.Substring(1,name.Length-1);
+        //  }
+        public Player()//(string name)
         {
-            Name = name.Substring(0,1).ToUpper() + name.Substring(1,name.Length-1);
+            //Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
         }
         public override string ToString()
         {
@@ -59,6 +70,12 @@ namespace Sutham_Connect4_Game
       //     PlayerTracker.Add(Name);
 
       //  }
+
+    }
+
+    public interface IWinner
+    {
+
 
     }
     public class TheColumn
@@ -129,7 +146,7 @@ namespace Sutham_Connect4_Game
         public  InputTracker GameTracker; 
         private List<TheColumn> TheBoardList; 
         private List<Player> playerList;
-        public int turncount = 1;
+        public int Turncount { get; set; } = 1;
         //static bool answer;
         public Connect4Game()
         {
@@ -145,12 +162,21 @@ namespace Sutham_Connect4_Game
             TheBoardList.Add(new TheColumn());
         }           
 
-        public void AddAPlayer(string name)
+      //  public void AddAPlayer(string name)
+      //  {
+      //      //var player = new Player(name);
+      //      playerList.Add(player);
+      //      
+      //  }
+
+        public void AddAPlayer(Player name)
         {
-            var player = new Player(name);
-            playerList.Add(player);
-            
-        }     
+            //var player = new Player(name);
+            name.Name = name.Name.Substring(0, 1).ToUpper() + name.Name.Substring(1, name.Name.Length - 1);  //add abstract
+            playerList.Add(name);
+
+        }
+
 
         public bool Play()
         {
@@ -168,7 +194,7 @@ namespace Sutham_Connect4_Game
                 return false;
             }
          
-            if (turncount % 2 == 0)
+            if (Turncount % 2 == 0)
             {
                
                 Console.Write($"Player >>");
@@ -180,7 +206,7 @@ namespace Sutham_Connect4_Game
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
                 TheBoardList[_goodinput].InsertX();  
-                turncount++;
+                Turncount++;
                 GameTracker.PlusCounter();
                 return true;
             }
@@ -195,22 +221,22 @@ namespace Sutham_Connect4_Game
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
                 TheBoardList[_goodinput].InsertO();             
-                turncount++;
+                Turncount++;
                 GameTracker.PlusCounter();
                 return true;              
             }            
         }
 
-        public bool Play(bool end)
-        {
-            return false;
-        }
+       // public bool Play(bool end)
+       // {
+       //     return false;
+       // }
         public void DisplayBoard()
         {
            
-        Console.Clear();       
-        Console.WriteLine("Sutham's Connect4Game");
-        Console.WriteLine($"    {playerList[0]} VS {playerList[1]}\n");
+            Console.Clear();       
+            Console.WriteLine("Sutham's Connect4Game");
+            Console.WriteLine($"    {playerList[0]} VS {playerList[1]}\n");
            
             for (int i = 0; i < 6 ; i++)
             {
@@ -478,19 +504,33 @@ namespace Sutham_Connect4_Game
           
             Console.Write("   Please enter player 1's name: ");
             name1 = Console.ReadLine();
-            var PlayerOne = new Player(name1);           
+            //var PlayerOne = new Player(name1);
+            var PlayerOne = new Player
+            { 
+                Name = name1,
+            };
+
+
             Console.Write("   Please enter player 2's name: ");
             name2 = Console.ReadLine();
-            var PlayerTwo = new Player(name2);
+            //var PlayerTwo = new Player(name2);
+            var PlayerTwo = new Player
+            {
+                Name = name2,
+            };
 
+                     
             var GolfConnect4 = new Connect4Game();
 
-            GolfConnect4.AddAPlayer(name1);
-            GolfConnect4.AddAPlayer(name2);
+            //GolfConnect4.AddAPlayer(name1);
+            //GolfConnect4.AddAPlayer(name2);
+
+            GolfConnect4.AddAPlayer(PlayerOne);
+            GolfConnect4.AddAPlayer(PlayerTwo);
             GolfConnect4.DisplayBoard();
 
-            string reset = null;
-            while ( GolfConnect4.Play() || reset.ToUpper() == "Y")
+           // string reset = null;
+            while ( GolfConnect4.Play())// || reset.ToUpper() == "Y")
             {
                 //Console.Write("Restart? Yes(Y) or No(N): ");
                 //reset = Console.ReadLine();
