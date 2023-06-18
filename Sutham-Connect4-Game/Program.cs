@@ -13,11 +13,10 @@ using System.Xml.Linq;
 
 namespace Sutham_Connect4_Game
 {
-
-
     public abstract class Person
     {
-        public string Name { get; set; }
+        public string Name { get; set; }      
+        public abstract void TobigName();     
 
     }
     public class Player : Person
@@ -31,6 +30,13 @@ namespace Sutham_Connect4_Game
         {
             //Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
         }
+
+        public override void TobigName()
+        {
+            Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
+        }
+
+
         public override string ToString()
         {
           return Name;
@@ -146,7 +152,7 @@ namespace Sutham_Connect4_Game
         public  InputTracker GameTracker; 
         private List<TheColumn> TheBoardList; 
         private List<Player> playerList;
-        public int Turncount { get; set; } = 1;
+        public int Turncount { get; set; } = 0;
         //static bool answer;
         public Connect4Game()
         {
@@ -169,11 +175,12 @@ namespace Sutham_Connect4_Game
       //      
       //  }
 
-        public void AddAPlayer(Player name)
+        public void AddAPlayer(Player playerOBJ)
         {
             //var player = new Player(name);
-            name.Name = name.Name.Substring(0, 1).ToUpper() + name.Name.Substring(1, name.Name.Length - 1);  //add abstract
-            playerList.Add(name);
+            //name.Name = name.Name.Substring(0, 1).ToUpper() + name.Name.Substring(1, name.Name.Length - 1);  //add abstract
+            playerOBJ.TobigName();
+            playerList.Add(playerOBJ);
 
         }
 
@@ -184,10 +191,15 @@ namespace Sutham_Connect4_Game
             DisplayBoard();
             int _goodinput;
             //int _keyinput;
+            Turncount++;
             if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
+                if(Turncount % 2 == 0)
+                    Console.Write($" {playerList[0]} Win the Game\n");
+                else
+                    Console.Write($" {playerList[1]} Win the Game\n");
                 return false;
-            }
+            }            
             else if (GameTracker.TurnCounter==42)
             {
                 Console.WriteLine("It is a draw, and no one wins. ");
@@ -195,8 +207,7 @@ namespace Sutham_Connect4_Game
             }
          
             if (Turncount % 2 == 0)
-            {
-               
+            {               
                 Console.Write($"Player >>");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write($" {playerList[1]} ");
@@ -206,7 +217,7 @@ namespace Sutham_Connect4_Game
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
                 TheBoardList[_goodinput].InsertX();  
-                Turncount++;
+                //Turncount++;
                 GameTracker.PlusCounter();
                 return true;
             }
@@ -221,7 +232,7 @@ namespace Sutham_Connect4_Game
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
                 TheBoardList[_goodinput].InsertO();             
-                Turncount++;
+                //Turncount++;
                 GameTracker.PlusCounter();
                 return true;              
             }            
@@ -454,8 +465,10 @@ namespace Sutham_Connect4_Game
         static void Main(string[] args)
         {
             string name1,name2;
+            var GolfConnect4 = new Connect4Game();
+
             //Console.ForegroundColor = ConsoleColor.;
-            
+
             string[] str = new string[]
             {
                 "                                               ",
@@ -510,7 +523,6 @@ namespace Sutham_Connect4_Game
                 Name = name1,
             };
 
-
             Console.Write("   Please enter player 2's name: ");
             name2 = Console.ReadLine();
             //var PlayerTwo = new Player(name2);
@@ -520,7 +532,7 @@ namespace Sutham_Connect4_Game
             };
 
                      
-            var GolfConnect4 = new Connect4Game();
+            //var GolfConnect4 = new Connect4Game();
 
             //GolfConnect4.AddAPlayer(name1);
             //GolfConnect4.AddAPlayer(name2);
