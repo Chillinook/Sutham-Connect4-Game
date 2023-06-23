@@ -13,29 +13,38 @@ using System.Xml.Linq;
 
 namespace Sutham_Connect4_Game
 {
-    public abstract class Person
+    public abstract class Player
     {
-        public string Name { get; set; }      
-        public abstract void TobigName();     
+        public string Name {  get; set; }          
+      
+        //public string Player
+        public abstract void TobigName();
 
+        public override string ToString()
+        {
+            return "Players";
+        }
     }
-    public class Player : Person
+    public class Human : Player
     {
         //public string Name { get; set; }
         //  public Player()//(string name)
         //   {
         //      Name = name.Substring(0,1).ToUpper() + name.Substring(1,name.Length-1);
         //  }
-        public Player()//(string name)
+        public Human()//(string name)
         {
             //Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
         }
 
         public override void TobigName()
         {
-            Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
+            //if (Name != null)
+                Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
+            //else
+                //Name = "Players";
+                //Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
         }
-
 
         public override string ToString()
         {
@@ -43,12 +52,26 @@ namespace Sutham_Connect4_Game
         }
 
     }
- 
+
+    public class Ai : Player
+    {
+        public override void TobigName()
+        {
+            Name = "AI: " + Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
+        }
+        public override string ToString()
+        {
+            return Name;
+        }
+
+
+    }
+
     public class InputTracker
     {
        // public List<string> PlayerTracker;  
        // public string Name { get; set; }
-        public int TurnCounter { get; set; } = 0;
+        public int GameCounter { get; set; } = 0;
        
     //    public InputTracker()
     //    {
@@ -56,7 +79,7 @@ namespace Sutham_Connect4_Game
      //   }
         public void PlusCounter()
         {
-            TurnCounter++;            
+            GameCounter++;            
         }
         public int InputProof(string inkey)
         {
@@ -79,11 +102,7 @@ namespace Sutham_Connect4_Game
 
     }
 
-    public interface IWinner
-    {
-
-
-    }
+ 
     public class TheColumn
     {
         List<char> chars;
@@ -184,7 +203,6 @@ namespace Sutham_Connect4_Game
 
         }
 
-
         public bool Play()
         {
             Referee.RecieveBoard(TheBoardList);
@@ -195,12 +213,42 @@ namespace Sutham_Connect4_Game
             if (Referee.ColumnCheck() || Referee.RowCheck() || Referee.DiagonalCheck() )
             {                
                 if(Turncount % 2 == 0)
-                    Console.Write($" {playerList[0]} Win the Game\n");
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write($" {playerList[0]}: O ");
+                    Console.ResetColor();
+                    Console.WriteLine($" Win the Game !!!");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("  ÛÛÛÛÛ ÛÛÛÛÛ                        ÛÛÛÛÛ   ÛÛÛ   ÛÛÛÛÛ                     ÛÛÛ ÛÛÛ     ");
+                    Console.WriteLine(" °°ÛÛÛ °°ÛÛÛ                        °°ÛÛÛ   °ÛÛÛ  °°ÛÛÛ                     °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("  °°ÛÛÛ ÛÛÛ    ÛÛÛÛÛÛ  ÛÛÛÛÛ ÛÛÛÛ    °ÛÛÛ   °ÛÛÛ   °ÛÛÛ   ÛÛÛÛÛÛ  ÛÛÛÛÛÛÛÛ  °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("   °°ÛÛÛÛÛ    ÛÛÛ°°ÛÛÛ°°ÛÛÛ °ÛÛÛ     °ÛÛÛ   °ÛÛÛ   °ÛÛÛ  ÛÛÛ°°ÛÛÛ°°ÛÛÛ°°ÛÛÛ °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("    °°ÛÛÛ    °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ     °°ÛÛÛ  ÛÛÛÛÛ  ÛÛÛ  °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("     °ÛÛÛ    °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ      °°°ÛÛÛÛÛ°ÛÛÛÛÛ°   °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ °°° °°°      ");
+                    Console.WriteLine("     ÛÛÛÛÛ   °°ÛÛÛÛÛÛ  °°ÛÛÛÛÛÛÛÛ       °°ÛÛÛ °°ÛÛÛ     °°ÛÛÛÛÛÛ  ÛÛÛÛ ÛÛÛÛÛ ÛÛÛ ÛÛÛ     ");
+                    Console.WriteLine("     °°°°°     °°°°°°    °°°°°°°°         °°°   °°°       °°°°°°  °°°° °°°°° °°° °°°     ");
+                    Console.ResetColor();
+                }
                 else
-                    Console.Write($" {playerList[1]} Win the Game\n");
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($" {playerList[1]}: X ");
+                    Console.ResetColor();
+                    Console.WriteLine($" Win the Game !!!");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("  ÛÛÛÛÛ ÛÛÛÛÛ                        ÛÛÛÛÛ   ÛÛÛ   ÛÛÛÛÛ                     ÛÛÛ ÛÛÛ     ");
+                    Console.WriteLine(" °°ÛÛÛ °°ÛÛÛ                        °°ÛÛÛ   °ÛÛÛ  °°ÛÛÛ                     °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("  °°ÛÛÛ ÛÛÛ    ÛÛÛÛÛÛ  ÛÛÛÛÛ ÛÛÛÛ    °ÛÛÛ   °ÛÛÛ   °ÛÛÛ   ÛÛÛÛÛÛ  ÛÛÛÛÛÛÛÛ  °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("   °°ÛÛÛÛÛ    ÛÛÛ°°ÛÛÛ°°ÛÛÛ °ÛÛÛ     °ÛÛÛ   °ÛÛÛ   °ÛÛÛ  ÛÛÛ°°ÛÛÛ°°ÛÛÛ°°ÛÛÛ °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("    °°ÛÛÛ    °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ     °°ÛÛÛ  ÛÛÛÛÛ  ÛÛÛ  °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ°ÛÛÛ     ");
+                    Console.WriteLine("     °ÛÛÛ    °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ      °°°ÛÛÛÛÛ°ÛÛÛÛÛ°   °ÛÛÛ °ÛÛÛ °ÛÛÛ °ÛÛÛ °°° °°°      ");
+                    Console.WriteLine("     ÛÛÛÛÛ   °°ÛÛÛÛÛÛ  °°ÛÛÛÛÛÛÛÛ       °°ÛÛÛ °°ÛÛÛ     °°ÛÛÛÛÛÛ  ÛÛÛÛ ÛÛÛÛÛ ÛÛÛ ÛÛÛ     ");
+                    Console.WriteLine("     °°°°°     °°°°°°    °°°°°°°°         °°°   °°°       °°°°°°  °°°° °°°°° °°° °°°     ");
+                    Console.ResetColor();
+                }
                 return false;
             }            
-            else if (GameTracker.TurnCounter==42)
+            else if (GameTracker.GameCounter==42)
             {
                 Console.WriteLine("It is a draw, and no one wins. ");
                 return false;
@@ -210,9 +258,9 @@ namespace Sutham_Connect4_Game
             {               
                 Console.Write($"Player >>");
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write($" {playerList[1]} ");
+                Console.Write($" {playerList[1]}: X ");
                 Console.ResetColor();
-                Console.Write("<< symbol X please enter slot number(1-7): ");          
+                Console.Write("<< please enter slot number(1-7): ");          
                 do
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
@@ -225,9 +273,9 @@ namespace Sutham_Connect4_Game
             {               
                 Console.Write($"Player >>");
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write($" {playerList[0]} ");
+                Console.Write($" {playerList[0]}: O ");
                 Console.ResetColor();
-                Console.Write("<< symbol O please enter slot number(1-7): ");
+                Console.Write("<< please enter slot number(1-7): ");
                 do
                     _goodinput = GameTracker.InputProof(Console.ReadLine()) - 1;
                 while (TheBoardList[_goodinput].Insertcheck());
@@ -309,7 +357,7 @@ namespace Sutham_Connect4_Game
                         Xcounter=0;
                         if (Ocounter == 4)
                         {
-                            Console.WriteLine("O Win Row");
+                            //Console.WriteLine("O Win Row");
                             return true;
                         }
                     }
@@ -319,7 +367,7 @@ namespace Sutham_Connect4_Game
                         Ocounter = 0;
                         if (Xcounter == 4)
                         {
-                            Console.WriteLine("X Win Row");
+                            //Console.WriteLine("X Win Row");
                             return true;
                         }
                     }
@@ -348,7 +396,7 @@ namespace Sutham_Connect4_Game
                         Xcounter = 0;
                         if (Ocounter == 4)
                         {
-                            Console.WriteLine("O Win Column");
+                           // Console.WriteLine("O Win Column");
                             return true;
                         }
                     }
@@ -358,7 +406,7 @@ namespace Sutham_Connect4_Game
                         Ocounter= 0;
                         if (Xcounter == 4)
                         {
-                            Console.WriteLine("X Win Column");
+                            //Console.WriteLine("X Win Column");
                             return true;
                         }
                     }
@@ -397,7 +445,7 @@ namespace Sutham_Connect4_Game
                                 Xcounter = 0;
                                 if (Ocounter == 4)
                                 {
-                                    Console.WriteLine("OO Win Diagonal");
+                                    //Console.WriteLine("OO Win Diagonal");
                                     return true;
                                 }
                             }
@@ -407,7 +455,7 @@ namespace Sutham_Connect4_Game
                                 Ocounter = 0;
                                 if (Xcounter == 4)
                                 {
-                                    Console.WriteLine("XX Win Diagonal");
+                                    //Console.WriteLine("XX Win Diagonal");
                                     return true;
                                 }
                             }
@@ -438,7 +486,7 @@ namespace Sutham_Connect4_Game
                                 Xcounter = 0;
                                 if (Ocounter == 4)
                                 {
-                                    Console.WriteLine("O Win Diagonal");
+                                    //Console.WriteLine("O Win Diagonal");
                                     return true;
                                 }
                             }
@@ -448,7 +496,7 @@ namespace Sutham_Connect4_Game
                                 Ocounter = 0;
                                 if (Xcounter == 4)
                                 {
-                                    Console.WriteLine("X Win Diagonal");
+                                    //Console.WriteLine("X Win Diagonal");
                                     return true;
                                 }
                             }
@@ -517,16 +565,17 @@ namespace Sutham_Connect4_Game
           
             Console.Write("   Please enter player 1's name: ");
             name1 = Console.ReadLine();
-            //var PlayerOne = new Player(name1);
-            var PlayerOne = new Player
+            //var PlayerOne = new Player(name1);        
+            Player PlayerOne = new Human
             { 
+                
                 Name = name1,
             };
 
             Console.Write("   Please enter player 2's name: ");
             name2 = Console.ReadLine();
             //var PlayerTwo = new Player(name2);
-            var PlayerTwo = new Player
+            Player PlayerTwo = new Human
             {
                 Name = name2,
             };
