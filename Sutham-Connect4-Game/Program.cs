@@ -29,7 +29,7 @@ namespace Sutham_Connect4_Game
             Name = name;
         }
 
-        public abstract void TobigName();               //Abstract method in abstract class
+        public abstract void MakeProperName();               //Abstract method in abstract class
 
         public override string ToString()
         {
@@ -45,9 +45,16 @@ namespace Sutham_Connect4_Game
            
         }
 
-        public override void TobigName()                // polymorpishm override abstract method on superclass
-        {           
-            Name = "Human: " + Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);           
+        public override void MakeProperName()               // polymorpishm override abstract method on superclass
+        {
+            try                                             //Try & Catch exception for null input player's name
+            {
+                Name = "Human: " + Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);     
+            }
+            catch (Exception)
+            {
+                Name = "Human: Player";
+            }
         }
 
         public override string ToString()
@@ -63,7 +70,7 @@ namespace Sutham_Connect4_Game
         {            
             Name = "AI Player";
         }
-        public override void TobigName()                       // polymorpishm override abstract method on superclass
+        public override void MakeProperName()                       // polymorpishm override abstract method on superclass
         {
             Name = "AI: " + Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
         }
@@ -183,7 +190,7 @@ namespace Sutham_Connect4_Game
 
         public void AddAPlayer(Player playerOBJ)
         {            
-            playerOBJ.TobigName();
+            playerOBJ.MakeProperName();
             playerList.Add(playerOBJ);
         }
 
