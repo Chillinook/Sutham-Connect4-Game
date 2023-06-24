@@ -5,17 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Channels;
-using System.Xml.Linq;
 
 namespace Sutham_Connect4_Game
 {
@@ -314,7 +303,7 @@ namespace Sutham_Connect4_Game
             { '#', '#', '#', '#', '#', '#', '#' },
             { '#', '#', '#', '#', '#', '#', '#' }
             };
-        public static void RecieveBoard(List<TheColumn> board)
+        public static void RecieveBoard(List<TheColumn> board)     //Receive board in list add to board in array
         {
             for (int i = 0; i < 6; i++)
             {             
