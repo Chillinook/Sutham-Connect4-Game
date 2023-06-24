@@ -19,7 +19,7 @@ using System.Xml.Linq;
 
 namespace Sutham_Connect4_Game
 {
-    public abstract class Player             //Abstract superclass player
+    public abstract class Player                            //Abstract superclass player
     {
         protected string Name {  get; set; }        
       
@@ -137,7 +137,7 @@ namespace Sutham_Connect4_Game
                 chars.Add('O');             
         }  
 
-        public char DisplayRow(int position)
+        public char DisplayRow(int position)            //method to populate or show from char list
         {
             if (chars.Count == 6)
             {
@@ -274,7 +274,7 @@ namespace Sutham_Connect4_Game
             }            
         }
     
-        public void DisplayBoard()
+        public void DisplayBoard()              //Call list of char in theboradlist to display
         {           
             Console.Clear();       
             Console.WriteLine("Sutham's Connect4Game");
