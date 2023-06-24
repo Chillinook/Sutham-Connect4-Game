@@ -13,34 +13,40 @@ using System.Xml.Linq;
 
 namespace Sutham_Connect4_Game
 {
-    public abstract class Player
+    public abstract class Player             //Abstract superclass player
     {
-        public string Name {  get; set; }          
+        protected string Name {  get; set; }        
       
-        //public string Player
-        public abstract void TobigName();
+        public Player(string name)
+        {
+            Name = name;
+        }
+
+        public abstract void TobigName();               //Abstract method in abstract class
 
         public override string ToString()
         {
-            return "Players";
+            if (Name != null) 
+               return "Players";
+            return Name; 
         }
     }
-    public class Human : Player
+    public class Human : Player        
     {
         //public string Name { get; set; }
         //  public Player()//(string name)
         //   {
         //      Name = name.Substring(0,1).ToUpper() + name.Substring(1,name.Length-1);
         //  }
-        public Human()//(string name)
-        {
-            //Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
+        public Human(string name) : base(name)          // call and use constuctor from superclass
+        {           
+            
         }
 
-        public override void TobigName()
+        public override void TobigName()                // polymorpishm override abstract method on superclass
         {
             //if (Name != null)
-                Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
+                Name = "Human: " + Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
             //else
                 //Name = "Players";
                 //Name = Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
@@ -50,12 +56,16 @@ namespace Sutham_Connect4_Game
         {
           return Name;
         }
-
+        
     }
 
     public class Ai : Player
     {
-        public override void TobigName()
+        public Ai(string name) : base (name)
+        {
+            //Name = "AI: " + name;
+        }
+        public override void TobigName()            // polymorpishm override abstract method on superclass
         {
             Name = "AI: " + Name.Substring(0, 1).ToUpper() + Name.Substring(1, Name.Length - 1);
         }
@@ -64,22 +74,26 @@ namespace Sutham_Connect4_Game
             return Name;
         }
 
-
     }
 
     public class InputTracker
     {
        // public List<string> PlayerTracker;  
        // public string Name { get; set; }
-        public int GameCounter { get; set; } = 0;
+        private int GameCounter { get; set; } = 0;             // Private field for counter 
        
     //    public InputTracker()
     //    {
             // PlayerTracker = new List<string>();
      //   }
-        public void PlusCounter()
+        public void PlusCounter()                               //Method for access private field
         {
             GameCounter++;            
+        }
+
+        public int ShowGameCounter()                            //Method for access private field
+        {
+            return GameCounter;
         }
         public int InputProof(string inkey)
         {
@@ -247,8 +261,9 @@ namespace Sutham_Connect4_Game
                     Console.ResetColor();
                 }
                 return false;
-            }            
-            else if (GameTracker.GameCounter==42)
+            }
+            else if (GameTracker.ShowGameCounter() == 42) 
+            //else if (GameTracker.GameCounter==42)
             {
                 Console.WriteLine("It is a draw, and no one wins. ");
                 return false;
@@ -321,7 +336,7 @@ namespace Sutham_Connect4_Game
         }  
     } 
 
-    public static class Referee
+    public static class Referee     //Static class referee judge winner from common board 
     {
         public static char[,] TheBoardArr = new char[,] {
             { '#', '#', '#', '#', '#', '#', '#' }, 
@@ -565,20 +580,24 @@ namespace Sutham_Connect4_Game
           
             Console.Write("   Please enter player 1's name: ");
             name1 = Console.ReadLine();
+            Player PlayerOne = new Human(name1);
+
+
             //var PlayerOne = new Player(name1);        
-            Player PlayerOne = new Human
-            { 
-                
-                Name = name1,
-            };
+            //Player PlayerOne = new Human
+            // { 
+
+            //    Name = name1,
+            // };
+
 
             Console.Write("   Please enter player 2's name: ");
             name2 = Console.ReadLine();
-            //var PlayerTwo = new Player(name2);
-            Player PlayerTwo = new Human
-            {
-                Name = name2,
-            };
+            Player PlayerTwo = new Human(name2);
+         //   Player PlayerTwo = new Human
+        //    {
+         //       Name = name2,
+         //   };
 
                      
             //var GolfConnect4 = new Connect4Game();
